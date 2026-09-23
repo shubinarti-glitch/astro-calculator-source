@@ -210,8 +210,9 @@ def export(source, destination, *, write=False):
                 raise ExportError("Forbidden/unplanned output: " + name)
             if hashlib.sha256(path.read_bytes()).hexdigest() != report["files"][name]:
                 raise ExportError("Output mismatch: " + name)
-    with (destination / "PUBLIC-SOURCE-REPORT.json").open("x", encoding="utf-8") as stream:
-        json.dump(report, stream, ensure_ascii=True, indent=2)
+    # The audit report is returned to the operator (and printed by the CLI),
+    # but is deliberately not copied into the public tree: it contains an
+    # internal inventory of excluded files and runtime packages.
     return report
 
 

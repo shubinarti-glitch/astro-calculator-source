@@ -64,7 +64,7 @@ def test_allowlist_exclusions_and_notices(source, tmp_path):
     assert "android/gradle/wrapper/gradle-wrapper.jar" in report["files"]
     assert "frontend/js/vendor/NOTICE.txt" in report["preserved_notices"]
     assert "android/swisseph/README.orig" in report["files"]
-    assert json.loads((destination / "PUBLIC-SOURCE-REPORT.json").read_text()) == report
+    assert not (destination / "PUBLIC-SOURCE-REPORT.json").exists()
 
 
 def test_local_android_signing_files_are_recorded_without_being_read(source, tmp_path):
