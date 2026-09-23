@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_forgot">Забыли пароль?</string>
+    <string name="password_reset">Сбросить пароль</string>
+    <string name="password_send">Отправить ссылку</string>
+    <string name="password_close">Закрыть</string>
+    <string name="password_help">Укажите почту аккаунта. Ссылка из письма откроет страницу установки нового пароля на сайте.</string>
+    <string name="password_sent">Если эта почта зарегистрирована, на неё отправлено письмо. Проверьте также папку «Спам».</string>
+    <string name="today_calculated_at">Обновлено: %1$s</string>
+    <string name="assistant_size">Размер помощника</string>
+    <string name="assistant_size_small">Маленький</string>
+    <string name="assistant_size_medium">Средний</string>
+    <string name="assistant_size_large">Большой</string>
+    <string name="feedback_title">Сообщить о проблеме</string>
+    <string name="feedback_help">Опишите действия и ошибку. Скопируйте текст и передайте поддержке привычным способом. Автоматической отправки нет.</string>
+    <string name="feedback_description">Что произошло?</string>
+    <string name="feedback_copy">Скопировать отчёт</string>
+    <string name="today_lunar_day_estimate">Лунный день: примерно %1$d (по фазе Луны)</string>
+</resources>

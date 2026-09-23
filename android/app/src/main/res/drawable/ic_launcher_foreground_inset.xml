@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Полная авторская иллюстрация раньше ошибочно находилась в background-слое,
+     который Android увеличивает и обрезает под системную маску. Показываем её
+     как foreground и удерживаем целиком в безопасной зоне adaptive icon. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@mipmap/ic_launcher_background"
+    android:inset="18%" />

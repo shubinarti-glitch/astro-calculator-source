@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AstroSMap" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#0A0A1A</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Стартовая тема: системная заставка в фирменных цветах, дальше — Theme.AstroSMap. -->
+    <style name="Theme.AstroSMap.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#0A0A1A</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.AstroSMap</item>
+    </style>
+    <style name="WidgetCalendarDay">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#F2F0FA</item>
+    </style>
+</resources>

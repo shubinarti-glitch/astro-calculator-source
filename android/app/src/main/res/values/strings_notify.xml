@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Отдельный файл строк для ежедневного напоминания: Android сливает все values/*.xml. -->
+<resources>
+    <string name="notify_channel">Ежедневное напоминание</string>
+    <string name="notify_channel_desc">Одно сообщение в день с настроем дня</string>
+    <string name="notify_title">Сегодня · %1$s в %2$s</string>
+    <string name="notify_setting">Напоминание раз в день</string>
+    <string name="notify_time">Время напоминания</string>
+    <string name="notify_hint">Одно сообщение в день, без рекламы. Считается на устройстве и работает без интернета.</string>
+    <string name="notify_denied">Разрешите уведомления в настройках телефона, иначе напоминание не придёт</string>
+</resources>

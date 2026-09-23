@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notify_channel">Daily reminder</string>
+    <string name="notify_channel_desc">One message a day with the mood of the day</string>
+    <string name="notify_title">Today · %1$s in %2$s</string>
+    <string name="notify_setting">Daily reminder</string>
+    <string name="notify_time">Reminder time</string>
+    <string name="notify_hint">One message a day, no ads. Computed on your device and works offline.</string>
+    <string name="notify_denied">Allow notifications in system settings, otherwise the reminder won\'t arrive</string>
+</resources>

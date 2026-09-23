@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+    <TextView android:id="@+id/wmc_d1" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d2" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d3" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d4" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d5" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d6" style="@style/WidgetCalendarDay" />
+    <TextView android:id="@+id/wmc_d7" style="@style/WidgetCalendarDay" />
+</LinearLayout>

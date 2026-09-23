@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Google Play build overrides: no steering to external payment (Payments policy). -->
+<resources>
+    <string name="premium_required">This technique requires the Premium subscription.</string>
+    <string name="premium_expired_banner">Premium has expired. Your charts are saved.</string>
+</resources>

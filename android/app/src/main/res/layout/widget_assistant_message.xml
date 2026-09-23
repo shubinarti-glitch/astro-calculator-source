@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wam_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/widget_bg"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/wam_character"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
+        android:contentDescription="@string/assistant_title"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/wam_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:textColor="#F2F0FA"
+        android:textSize="14sp"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:text="@string/assistant_widget_day" />
+</LinearLayout>

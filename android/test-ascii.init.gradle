@@ -1,0 +1,24 @@
+// Windows test worker workaround: stage the existing compiled classpath under an ASCII path.
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            doFirst {
+                def stage = java.nio.file.Files.createTempDirectory('astrosmap-tests-').toFile()
+                def stagedClasspath = []
+                classpath.files.eachWithIndex { source, index ->
+                    def folder = new File(stage, "cp-${index}")
+                    project.copy { from source; into folder }
+                    stagedClasspath.add(source.isDirectory() ? folder : new File(folder, source.name))
+                }
+                def stagedTests = []
+                testClassesDirs.files.eachWithIndex { source, index ->
+                    def folder = new File(stage, "tests-${index}")
+                    project.copy { from source; into folder }
+                    stagedTests.add(folder)
+                }
+                classpath = project.files(stagedClasspath)
+                testClassesDirs = project.files(stagedTests)
+            }
+        }
+    }
+}

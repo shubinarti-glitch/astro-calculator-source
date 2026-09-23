@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_forgot">Forgot password?</string>
+    <string name="password_reset">Reset password</string>
+    <string name="password_send">Send link</string>
+    <string name="password_close">Close</string>
+    <string name="password_help">Enter your account email. The email link opens the website to set a new password.</string>
+    <string name="password_sent">If this email is registered, a reset email has been sent. Please also check Spam.</string>
+    <string name="today_calculated_at">Updated: %1$s</string>
+    <string name="assistant_size">Assistant size</string>
+    <string name="assistant_size_small">Small</string>
+    <string name="assistant_size_medium">Medium</string>
+    <string name="assistant_size_large">Large</string>
+    <string name="feedback_title">Report a problem</string>
+    <string name="feedback_help">Describe your actions and the error. Copy the text and send it to support using your preferred channel. Nothing is sent automatically.</string>
+    <string name="feedback_description">What happened?</string>
+    <string name="feedback_copy">Copy report</string>
+    <string name="today_lunar_day_estimate">Approximate lunar day: %1$d (from lunar phase)</string>
+</resources>

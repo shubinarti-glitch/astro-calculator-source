@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Переопределения для сборки Google Play: без увода на внешнюю оплату (Payments policy). -->
+<resources>
+    <string name="premium_required">Эта техника доступна по подписке «Премиум».</string>
+    <string name="premium_expired_banner">Премиум истёк. Ваши карты сохранены.</string>
+</resources>

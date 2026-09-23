@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Натальная карта онлайн бесплатно с транзитами | Project Artemisa</title>
+  <meta name="description" content="Постройте натальную карту онлайн бесплатно по дате, времени и месту рождения. Транзиты, синастрия, соляр, прогрессии, прогноз и интерпретации." />
+  <link rel="canonical" href="https://astrosmap.ru/" />
+  <meta name="theme-color" content="#0c0c1e" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0c1e'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23c9a86a'%3E%E2%9C%B7%3C/text%3E%3C/svg%3E" />
+  <meta property="og:title" content="Натальная карта онлайн бесплатно с транзитами | Project Artemisa" />
+  <meta property="og:description" content="Бесплатный расчёт натальной карты по дате, времени и месту рождения: транзиты, синастрия, соляр, прогрессии и прогноз." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://astrosmap.ru/" />
+  <meta name="twitter:card" content="summary" />
+  <script>(function(){try{var t=localStorage.getItem('astro_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+  <link rel="stylesheet" href="/fonts/fonts.css?v=20" />
+  <link rel="stylesheet" href="/css/style.css?v=33" />
+  <style>html[lang="en"] .chart-svg::after { content: "⤢ click to enlarge"; }</style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="sun-rays" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-glyph" aria-hidden="true"></span>
+      <div class="logo-text">
+        <h1 class="title-main" data-i18n="hero_title">Натальная карта онлайн</h1>
+        <p class="brand" data-i18n="brand">Project Artemisa</p>
+        <p class="tagline" data-i18n="tagline">Бесплатный расчёт · транзиты, прогрессии, соляр и прогноз</p>
+      </div>
+    </div>
+    <div class="auth-area">
+      <div class="lang-switch" id="lang-switch" data-i18n-title="lang_title" title="Язык / Language">
+        <button class="lang-opt" data-lang="ru">RU</button>
+        <button class="lang-opt" data-lang="en">EN</button>
+      </div>
+      <div class="theme-switch" id="theme-switch" data-i18n-title="theme_title" title="Светлая / тёмная тема">
+        <button class="theme-opt" data-theme-set="light" aria-label="Светлая тема" title="Светлая">☀️</button>
+        <button class="theme-opt" data-theme-set="dark" aria-label="Тёмная тема" title="Тёмная">🌙</button>
+      </div>
+      <button id="login-btn" class="auth-btn" data-i18n="login">Войти / Регистрация</button>
+      <div id="user-box" class="user-box hidden">
+        <div class="user-id">
+          <button class="user-name" id="user-name" title="Статус подписки"></button>
+          <span class="premium-gem hidden" id="premium-gem" aria-hidden="true">💎</span>
+          <div id="lock-popover" class="lock-popover hidden"></div>
+        </div>
+        <button id="premium-btn" class="auth-btn header-only" data-i18n="premium_btn">✦ Премиум</button>
+        <button id="admin-btn" class="auth-btn hidden" data-i18n="admin_panel">⚙ Админ</button>
+        <button id="cabinet-btn" class="auth-btn ghost" data-i18n-title="cabinet_title" title="Кабинет" aria-label="Кабинет">👤</button>
+        <button id="logout-btn" class="auth-btn ghost" data-i18n="logout">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="modal-overlay hidden" id="auth-modal">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Закрыть">×</button>
+      <div class="tabs auth-tabs">
+        <button class="auth-tab active" data-auth="login" type="button" data-i18n="auth_login">Вход</button>
+        <button class="auth-tab" data-auth="register" type="button" data-i18n="auth_register">Регистрация</button>
+      </div>
+      <form id="auth-form" autocomplete="off">
+        <label id="auth-username-row" data-i18n="username_or_email">Имя пользователя или почта
+          <input type="text" id="auth-username" autocomplete="username" />
+        </label>
+        <label id="auth-email-row" class="hidden" data-i18n="email_label">Почта
+          <input type="email" id="auth-email" autocomplete="email" />
+        </label>
+        <label id="auth-password-row" data-i18n="password">Пароль
+          <span class="pw-wrap">
+            <input type="password" id="auth-password" autocomplete="current-password" />
+            <button type="button" class="pw-eye" aria-label="Показать пароль" tabindex="-1">👁</button>
+          </span>
+        </label>
+        <label id="auth-password2-row" class="hidden" data-i18n="password_repeat">Повторите пароль
+          <span class="pw-wrap">
+            <input type="password" id="auth-password2" autocomplete="new-password" />
+            <button type="button" class="pw-eye" aria-label="Показать пароль" tabindex="-1">👁</button>
+          </span>
+        </label>
+        <a href="#" id="auth-forgot" class="auth-forgot" data-i18n="forgot_link">Забыли пароль?</a>
+        <p class="register-gift hidden" id="register-gift" data-i18n="register_gift">🎁 Подтвердите почту после регистрации — и первый PDF-отчёт будет бесплатным.</p>
+        <div class="consent-row hidden" id="consent-row">
+          <label class="consent-item">
+            <input type="checkbox" id="terms-check" />
+            <span data-i18n-html="consent_terms">Я принимаю <a href="#" id="terms-link">Пользовательское соглашение</a>.</span>
+          </label>
+          <label class="consent-item">
+            <input type="checkbox" id="consent-check" />
+            <span data-i18n-html="consent">Я ознакомлен(а) с <a href="#" id="privacy-link">политикой обработки персональных данных</a> и даю согласие на обработку моих данных в соответствии с Федеральным законом № 152-ФЗ.</span>
+          </label>
+        </div>
+        <div class="auth-error hidden" id="auth-error"></div>
+        <button type="submit" class="btn-primary" id="auth-submit" data-i18n="do_login">Войти</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="cabinet-modal">
+    <div class="modal cabinet-modal">
+      <button class="modal-close" id="cabinet-close" aria-label="Закрыть">×</button>
+      <div class="cab-head">
+        <div class="cab-avatar" id="cab-avatar">👤</div>
+        <div class="cab-head-info">
+          <div class="cab-head-name" id="cab-head-name"></div>
+          <div class="cab-badges" id="cab-badges"></div>
+        </div>
+      </div>
+      <div class="cab-tabs" id="cab-tabs" role="tablist">
+        <button class="cab-tab active" data-cab="profile" type="button" data-i18n="cab_tab_profile">Профиль</button>
+        <button class="cab-tab" data-cab="people" type="button" data-i18n="cab_tab_people">Мои люди</button>
+        <button class="cab-tab" data-cab="history" type="button" data-i18n="cab_tab_history">История</button>
+        <button class="cab-tab" data-cab="payments" type="button" data-i18n="cab_tab_payments">Платежи</button>
+      </div>
+      <div class="cab-panel" id="cab-panel-profile">
+        <div id="cab-profile" class="cab-card"></div>
+        <div id="cab-sub" class="cab-card"></div>
+      </div>
+      <div class="cab-panel hidden" id="cab-panel-people">
+        <div id="cab-people"></div>
+      </div>
+      <div class="cab-panel hidden" id="cab-panel-history">
+        <div id="cab-history"></div>
+      </div>
+      <div class="cab-panel hidden" id="cab-panel-payments">
+        <div id="cab-payments"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="premium-modal">
+    <div class="modal premium-modal-card">
+      <button class="modal-close" id="premium-close" aria-label="Закрыть">×</button>
+      <h3 data-i18n="premium_title">Подписка «Премиум»</h3>
+      <p class="section-note" data-i18n="premium_desc">Глубокий отчёт, ректификация, синастрия, прогнозы и PDF-экспорт.</p>
+      <ul class="premium-benefits">
+        <li data-i18n="premium_ben_1">Транзиты, синастрия, соляр/лунар, прогрессии и прогноз</li>
+        <li data-i18n="premium_ben_2">Подробный разбор личности и ректификация времени рождения</li>
+        <li data-i18n="premium_ben_3">Экспорт отчёта в PDF и еженедельный прогноз на почту</li>
+      </ul>
+      <div class="premium-status hidden" id="premium-status"></div>
+      <div class="premium-plans" id="premium-plans">
+        <section class="plan-section plan-section-sub">
+          <div class="plan-group-label" data-i18n="plan_group_sub">Подписка</div>
+          <button class="btn-primary plan-btn" data-plan="month" type="button">
+            <span class="plan-name" data-i18n="plan_month">Месяц</span>
+            <span class="plan-price">299 ₽<small data-i18n="plan_month_note">/месяц</small></span>
+          </button>
+          <button class="btn-primary plan-btn plan-best" data-plan="year" type="button">
+            <span class="plan-badge" data-i18n="plan_year_badge">Выгодно −45%</span>
+            <span class="plan-name" data-i18n="plan_year">Год</span>
+            <span class="plan-price">1990 ₽<small data-i18n="plan_year_note2">≈166 ₽/месяц</small></span>
+          </button>
+        </section>
+        <section class="plan-section plan-section-consult">
+          <div class="plan-group-label" data-i18n="plan_group_consult">Подписка + личная консультация астролога</div>
+          <a class="consult-author" href="/about">
+            <img src="/img/astrolog.jpg" alt="" aria-hidden="true" />
+            <span>
+              <span class="consult-author-name" data-i18n="ab_consult_by">Консультацию проводит Артём — астролог и таролог</span>
+              <span class="consult-author-more" data-i18n="ab_consult_more">Об авторе →</span>
+            </span>
+          </a>
+          <button class="btn-primary plan-btn" data-plan="plus_month" type="button">
+            <span class="plan-name" data-i18n="plan_plus_month">Месяц + консультация</span>
+            <span class="plan-price">1799 ₽</span>
+          </button>
+          <button class="btn-primary plan-btn" data-plan="plus_year" type="button">
+            <span class="plan-name" data-i18n="plan_plus_year">Год + консультация</span>
+            <span class="plan-price">3490 ₽</span>
+          </button>
+        </section>
+        <section class="plan-section plan-section-once">
+          <div class="plan-group-label" data-i18n="plan_group_once">Разово, без подписки</div>
+          <button class="btn-primary plan-btn" data-plan="consult" type="button">
+            <span class="plan-name" data-i18n="plan_consult">Только консультация</span>
+            <span class="plan-price">3500 ₽<small data-i18n="plan_consult_note2">личный разбор карты</small></span>
+          </button>
+          <button class="btn-primary plan-btn plan-report" data-plan="report" type="button">
+            <span class="plan-name" data-i18n="plan_report">Разовый PDF-отчёт</span>
+            <span class="plan-price">149 ₽<small data-i18n="plan_report_note2">один отчёт в PDF</small></span>
+          </button>
+        </section>
+      </div>
+      <div class="premium-status hidden" id="consult-status"></div>
+      <div class="premium-status hidden" id="report-status"></div>
+      <div class="auth-error hidden" id="premium-error"></div>
+      <p class="section-note" data-i18n-html="premium_note">Оплата через ЮKassa. Подписка активируется сразу после оплаты. Нажимая «Оплатить», вы принимаете условия <a href="#" id="premium-offer-link">Публичной оферты</a>.</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="privacy-modal">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="privacy-close" aria-label="Закрыть">×</button>
+      <h2 class="privacy-title" data-i18n="privacy_title">Политика обработки персональных данных</h2>
+      <div class="privacy-text">
+        <p data-i18n="privacy_p_intro">Редакция от 01.09.2026. Настоящая Политика определяет порядок обработки персональных данных пользователей сайта astrosmap.ru и мобильного приложения AstroSMap (далее — Сервис) в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
+        <p data-i18n-html="privacy_p_operator"><strong>Оператор.</strong> Обработку персональных данных осуществляет Шубин Артём Иванович, применяющий специальный налоговый режим «Налог на профессиональный доход» (самозанятый), ИНН 245010711934. Адрес для запросов по вопросам обработки персональных данных (удаление, отзыв согласия): astrosmap@yandex.ru.</p>
+        <p data-i18n-html="privacy_p1"><strong>1. Данные.</strong> Имя пользователя, email, хеш пароля; данные рождения, место и координаты; названия и заметки профилей; история расчётов; статусы платежей и подписки; обращения в поддержку; настройки рассылки; технический идентификатор устройства (device_id) и события использования, которые могут содержать user_id; сведения в localStorage браузера.</p>
+        <p data-i18n-html="privacy_p2"><strong>2. Аналитика и локальное хранение.</strong> Device_id и события с возможной привязкой к user_id являются псевдонимизированными, а не полностью обезличенными данными. В localStorage могут храниться токен входа, язык, тема и последнее выбранное местоположение.</p>
+        <p data-i18n-html="privacy_p3"><strong>3. Цели.</strong> Регистрация, авторизация и безопасность аккаунта; расчёты и сохранение результатов; поддержка; обработка платежей и подписки; отправка сервисных писем и добровольной рассылки; организация консультации; аналитика, диагностика и улучшение Сервиса.</p>
+        <p data-i18n-html="privacy_p4"><strong>4. Основания и защита.</strong> Согласие пользователя, исполнение договора и требования закона. Пароль хранится только в виде криптографического хеша. Доступ к данным ограничивается, применяются технические и организационные меры защиты.</p>
+        <p data-i18n-html="privacy_p5"><strong>5. Получатели.</strong> ЮKassa — платежи (данные банковской карты Сервис не получает); Яндекс.Почта — доставка писем; OpenStreetMap — поиск места по введённому тексту; Telegram — только по инициативе пользователя для консультации; поставщик хостинга — размещение и техническая работа Сервиса. Передаётся только необходимый объём данных.</p>
+        <p data-i18n-html="privacy_p6"><strong>6. Сроки.</strong> Данные аккаунта — до его удаления или отзыва согласия; обращения поддержки — до 3 лет; аналитические события — до 1 года; токены — до истечения срока или отзыва; платежные и налоговые сведения — в течение установленного законом срока; резервные копии удалённых данных — до 30 дней.</p>
+        <p data-i18n-html="privacy_p7"><strong>7. Права и удаление.</strong> Пользователь может исправлять данные, отключить рассылку, удалить отдельные материалы и удалить аккаунт через кабинет либо направить запрос на astrosmap@yandex.ru. Отзыв согласия производится тем же способом. Для защиты аккаунта может потребоваться подтверждение личности.</p>
+        <p data-i18n-html="privacy_p8"><strong>8. Последствия удаления.</strong> После подтверждения запроса аккаунт и связанные данные удаляются либо обезличиваются, кроме сведений, которые оператор обязан хранить по закону. Данные могут оставаться в резервных копиях не более 30 дней.</p>
+        <p data-i18n-html="privacy_p9"><strong>9. Данные третьих лиц.</strong> Вводя данные рождения другого человека, пользователь подтверждает наличие законного основания и его согласия.</p>
+        <p data-i18n-html="privacy_p10"><strong>10. Изменения.</strong> Актуальная версия Политики публикуется на astrosmap.ru/privacy.html. Версия документа: 2026-09-01.</p>
+        <p class="info-disclaimer" data-i18n="privacy_disclaimer">Сервис носит образовательно-развлекательный характер и не оказывает медицинских, юридических или финансовых услуг.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="terms-modal">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="terms-close" aria-label="Закрыть">×</button>
+      <h2 class="privacy-title" data-i18n="terms_title">Пользовательское соглашение</h2>
+      <div class="privacy-text">
+        <p data-i18n="terms_p_intro">Редакция от 01.09.2026, версия 2026-09-01. Настоящее Пользовательское соглашение регулирует отношения между Шубиным Артёмом Ивановичем, применяющим НПД (самозанятый), ИНН 245010711934, и пользователем сервиса «Project Artemisa» на astrosmap.ru. Начиная использовать Сервис, пользователь принимает Соглашение в полном объёме.</p>
+        <p data-i18n-html="terms_p1"><strong>1. Предмет.</strong> Сервис предоставляет пользователю доступ к астрологическим расчётам (натальная карта, транзиты, синастрия, прогнозы, ректификация и др.) и текстовым интерпретациям на основе алгоритмов и эфемерид Swiss Ephemeris.</p>
+        <p data-i18n-html="terms_p2"><strong>2. Характер сервиса.</strong> Сервис носит информационно-развлекательный и образовательный характер. Материалы и интерпретации не являются научным, медицинским, психологическим, юридическим или финансовым заключением и не заменяют консультацию соответствующего специалиста.</p>
+        <p data-i18n-html="terms_p3"><strong>3. Отсутствие гарантий и ограничение ответственности.</strong> Астрологические расчёты и прогнозы описывают потенциал и тенденции, а не предопределённые события. Администрация не гарантирует достоверность, точность или применимость результатов и не несёт ответственности за решения, действия или последствия, наступившие в результате использования Сервиса. Пользователь принимает такие решения самостоятельно и на свой риск.</p>
+        <p data-i18n-html="terms_p4"><strong>4. Возрастное ограничение.</strong> Сервис предназначен для лиц старше 18 лет (18+).</p>
+        <p data-i18n-html="terms_p5"><strong>5. Обязанности пользователя.</strong> Пользователь обязуется не использовать Сервис в противоправных целях, не нарушать его работу и не вводить данные третьих лиц без их согласия. Ответственность за корректность введённых данных несёт пользователь.</p>
+        <p data-i18n-html="terms_p6"><strong>6. Интеллектуальная собственность.</strong> Программный код, оформление и тексты интерпретаций Сервиса охраняются законом. Использование материалов Сервиса вне личных некоммерческих целей без согласия Администрации не допускается.</p>
+        <p data-i18n-html="terms_p7"><strong>7. Персональные данные.</strong> Обработка персональных данных осуществляется в соответствии с Политикой обработки персональных данных, размещённой на Сервисе.</p>
+        <p data-i18n-html="terms_p8"><strong>8. Изменение условий.</strong> Администрация вправе изменять условия Соглашения и функциональность Сервиса. Актуальная редакция размещается на Сервисе.</p>
+        <p class="info-disclaimer" data-i18n-html="terms_disclaimer">Платные функции (подписка «Премиум», консультации) предоставляются на условиях <a href="#" id="terms-offer-link">Публичной оферты</a>, размещённой на Сервисе.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="offer-modal">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="offer-close" aria-label="Закрыть">×</button>
+      <h2 class="privacy-title" data-i18n="offer_title">Публичная оферта</h2>
+      <div class="privacy-text">
+        <p data-i18n="offer_intro">Настоящая Публичная оферта (далее — Оферта) является предложением Шубина Артёма Ивановича, применяющего специальный налоговый режим «Налог на профессиональный доход» (самозанятый), ИНН 245010711934, e-mail: astrosmap@yandex.ru (далее — Исполнитель), заключить договор возмездного оказания услуг с любым лицом, оплатившим услуги на сервисе «Project Artemisa», размещённом по адресу astrosmap.ru (далее — Сервис). Оплата услуги означает полное принятие условий Оферты (акцепт).</p>
+        <p data-i18n-html="offer_p1"><strong>1. Услуги и тарифы.</strong> Подписка «Премиум» — расширенный доступ к функциям Сервиса (глубокий отчёт, ректификация, синастрия, прогнозы, PDF-экспорт): месяц — 299 ₽, год — 1990 ₽. Подписка «Премиум+» — подписка и одна консультация астролога: месяц — 1799 ₽, год — 3490 ₽. Консультация астролога без подписки — 3500 ₽.</p>
+        <p data-i18n-html="offer_p2"><strong>2. Порядок оплаты.</strong> Оплата производится через платёжный сервис ЮKassa банковской картой или иными доступными способами. Данные карты обрабатываются ЮKassa; Исполнитель их не получает. Подписка активируется автоматически сразу после подтверждения оплаты и действует указанный в тарифе срок. Автоматическое продление подписки не применяется: по окончании срока списаний не происходит, продление — только новой оплатой по желанию пользователя.</p>
+        <p data-i18n-html="offer_p3"><strong>3. Консультация астролога.</strong> После оплаты тарифа с консультацией Исполнитель связывается с пользователем в Telegram (кнопка связи появляется в Сервисе после оплаты) в течение 3 (трёх) рабочих дней для согласования времени. Консультация — личный разбор натальной карты длительностью до 60 минут, в формате видеосвязи либо ином удобном пользователю формате (переписка, голосовая беседа) по согласованию сторон. Для консультации пользователь предоставляет данные рождения.</p>
+        <p data-i18n-html="offer_p4"><strong>4. Характер услуг.</strong> Услуги носят информационно-развлекательный характер. Расчёты и консультации описывают астрологические тенденции, не являются медицинской, психологической, юридической или финансовой помощью и не гарантируют наступления событий. Решения на основе полученной информации пользователь принимает самостоятельно.</p>
+        <p data-i18n-html="offer_p5"><strong>5. Отказ от услуги и возврат средств.</strong> Пользователь вправе отказаться от услуги в любой момент (ст. 32 Закона РФ «О защите прав потребителей»), направив заявление на e-mail Исполнителя с указанием имени пользователя и даты платежа. Возврат: за консультацию — в полном объёме, если консультация ещё не оказана; за подписку — пропорционально неиспользованному сроку. Возврат производится тем же способом, которым была произведена оплата, в течение 10 рабочих дней с момента получения заявления.</p>
+        <p data-i18n-html="offer_p6"><strong>6. Чек.</strong> На каждый платёж Исполнитель формирует чек в соответствии с Федеральным законом № 422-ФЗ (налог на профессиональный доход); чек направляется на контакт, указанный при оплате.</p>
+        <p data-i18n-html="offer_p7"><strong>7. Претензии.</strong> Претензии по качеству услуг направляются на e-mail Исполнителя и рассматриваются в течение 10 рабочих дней. Споры разрешаются в соответствии с законодательством РФ.</p>
+        <p data-i18n-html="offer_p8"><strong>8. Прочие условия.</strong> Исполнитель вправе изменять Оферту; для пользователя действует редакция, актуальная на момент оплаты. Во всём, что не урегулировано Офертой, применяются Пользовательское соглашение и законодательство РФ.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="chart-modal">
+    <div class="chart-modal-inner">
+      <button class="modal-close" id="chart-modal-close" aria-label="Закрыть">×</button>
+      <div id="chart-modal-svg"></div>
+      <div class="chart-zoom-controls">
+        <button id="chart-zoom-out" aria-label="Уменьшить">−</button>
+        <button id="chart-zoom-reset" aria-label="По размеру экрана">⤢</button>
+        <button id="chart-zoom-in" aria-label="Увеличить">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="passwd-modal">
+    <div class="modal">
+      <button class="modal-close" id="passwd-close" aria-label="Закрыть">×</button>
+      <h2 class="privacy-title" data-i18n="passwd_title">Сменить пароль</h2>
+      <form id="passwd-form">
+        <span class="pw-wrap">
+          <input type="password" id="passwd-old" data-i18n-ph="passwd_old" placeholder="Текущий пароль" autocomplete="current-password" required minlength="1" />
+          <button type="button" class="pw-eye" aria-label="Показать пароль" tabindex="-1">👁</button>
+        </span>
+        <span class="pw-wrap">
+          <input type="password" id="passwd-new" data-i18n-ph="passwd_new" placeholder="Новый пароль (мин. 8 символов)" autocomplete="new-password" required minlength="8" />
+          <button type="button" class="pw-eye" aria-label="Показать пароль" tabindex="-1">👁</button>
+        </span>
+        <p id="passwd-msg" class="hint hidden"></p>
+        <button type="submit" class="vedic-btn" data-i18n="passwd_submit">Сменить</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="admin-modal">
+    <div class="modal modal-wide">
+      <button class="modal-close" id="admin-close" aria-label="Закрыть">×</button>
+      <h2 class="privacy-title" data-i18n="admin_panel">Админ-панель</h2>
+      <div class="tabs adm-tabs">
+        <button class="adm-tab active" data-atab="overview" type="button" data-i18n="admin_tab_overview">Обзор</button>
+        <button class="adm-tab" data-atab="users" type="button" data-i18n="admin_tab_users">Пользователи</button>
+        <button class="adm-tab" data-atab="pay" type="button" data-i18n="admin_tab_pay">Платежи</button>
+        <button class="adm-tab" data-atab="texts" type="button" data-i18n="admin_tab_texts">Тексты</button>
+      </div>
+
+      <div class="adm-pane" id="adm-pane-overview">
+        <div id="admin-stats" class="admin-stats"></div>
+        <h3 class="adm-section-title" data-i18n="admin_usage_title">Использование функций (30 дней / всего)</h3>
+        <div class="table-wrap"><table id="admin-usage"></table></div>
+      </div>
+
+      <div class="adm-pane hidden" id="adm-pane-users">
+        <div class="table-wrap"><table id="admin-users"></table></div>
+      </div>
+
+      <div class="adm-pane hidden" id="adm-pane-pay">
+        <div id="admin-pay-summary" class="admin-stats"></div>
+        <div class="table-wrap"><table id="admin-payments"></table></div>
+      </div>
+
+      <div class="adm-pane hidden" id="adm-pane-texts">
+        <p class="hint" data-i18n="admin_texts_hint">Найдите любой текст по словам или ключу и отредактируйте. Изменения применяются сразу ко всем расчётам.</p>
+        <div class="adm-text-controls">
+          <input type="text" id="admin-text-search" data-i18n-ph="admin_texts_search" placeholder="Поиск по тексту или ключу…" />
+          <label class="adm-text-onlyov"><input type="checkbox" id="admin-text-overridden" /> <span data-i18n="admin_texts_only">только изменённые</span></label>
+        </div>
+        <div id="admin-text-count" class="adm-text-count"></div>
+        <div id="admin-text-list"></div>
+        <button id="admin-text-more" class="vedic-btn hidden" data-i18n="admin_texts_more">Показать ещё</button>
+
+        <details class="adm-audit">
+          <summary data-i18n="admin_audit_title">История правок текстов</summary>
+          <div id="admin-audit-list"></div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="deep-modal">
+    <div class="modal modal-report">
+      <button class="modal-close" id="deep-close" aria-label="Закрыть">×</button>
+      <div class="report-actions">
+        <button id="deep-pdf" class="vedic-btn" data-i18n="deep_pdf">📄 Скачать PDF</button>
+        <button id="deep-print" class="vedic-btn" data-i18n="deep_print">🖨 Печать</button>
+      </div>
+      <div id="deep-content" class="report-content"></div>
+    </div>
+  </div>
+
+  <main class="layout">
+    <!-- Панель ввода -->
+    <aside class="panel form-panel">
+      <h2 data-i18n="birth_data">Данные рождения</h2>
+      <form id="birth-form" autocomplete="off">
+        <label data-i18n="name">Имя
+          <input type="text" id="name" data-i18n-ph="name_ph" placeholder="Например, Анна" />
+        </label>
+
+        <div class="row">
+          <label data-i18n="birth_date">Дата рождения
+            <input type="date" id="birth-date" required />
+          </label>
+          <label data-i18n="time">Время
+            <input type="time" id="birth-time" value="12:00" required />
+          </label>
+        </div>
+
+        <details class="manual-coords">
+          <summary data-i18n="dst_disambiguation">Уточнение времени при переводе часов</summary>
+          <label data-i18n="dst_choice">Какой повторяющийся час использовать
+            <select id="birth-is-dst">
+              <option value="" data-i18n="dst_auto">Определить автоматически</option>
+              <option value="true" data-i18n="dst_first">Первый час — летнее время</option>
+              <option value="false" data-i18n="dst_second">Второй час — стандартное время</option>
+            </select>
+          </label>
+        </details>
+
+        <label data-i18n="birth_city">Город рождения
+          <div class="autocomplete">
+            <input type="text" id="city" data-i18n-ph="city_ph" placeholder="Начните вводить город…" autocomplete="off" />
+            <ul id="city-results" class="suggestions hidden"></ul>
+          </div>
+        </label>
+
+        <div class="geo-confirm hidden" id="geo-confirm"></div>
+
+        <details class="manual-coords" id="manual-coords">
+          <summary data-i18n="manual_coords">Координаты вручную</summary>
+          <div class="row">
+            <label data-i18n="lat">Широта
+              <input type="number" id="lat" step="any" placeholder="55.7558" />
+            </label>
+            <label data-i18n="lng">Долгота
+              <input type="number" id="lng" step="any" placeholder="37.6173" />
+            </label>
+          </div>
+          <button type="button" class="btn-rev-geo" id="rev-geo-btn" data-i18n="rev_geo_btn">🔎 Определить место по координатам</button>
+          <input type="hidden" id="tz" />
+        </details>
+
+        <label data-i18n="houses_system">Система домов
+          <select id="houses-system">
+            <option value="P" selected data-i18n="hs_P">Плацидус</option>
+            <option value="K" data-i18n="hs_K">Кох</option>
+            <option value="W" data-i18n="hs_W">Цельнознаковая</option>
+            <option value="E" data-i18n="hs_E">Равнодомная</option>
+            <option value="R" data-i18n="hs_R">Региомонтан</option>
+            <option value="C" data-i18n="hs_C">Кампано</option>
+            <option value="B" data-i18n="hs_B">Алькабитиус</option>
+            <option value="M" data-i18n="hs_M">Морин</option>
+          </select>
+        </label>
+
+        <div class="transit-block hidden" id="current-location-block">
+          <h3 data-i18n="current_location_title">Текущее местоположение</h3>
+          <p class="hint" data-i18n="current_location_hint">Для прогноза укажите город, где вы находитесь сейчас. Если ничего не менять, будет использован город рождения.</p>
+          <label data-i18n="current_city">Город сейчас
+            <div class="autocomplete">
+              <input type="text" id="current-city" data-i18n-ph="city_ph" placeholder="Начните вводить город…" autocomplete="off" />
+              <ul id="current-city-results" class="suggestions hidden"></ul>
+            </div>
+          </label>
+          <div class="geo-confirm hidden" id="current-geo-confirm"></div>
+          <input type="hidden" id="current-lat" />
+          <input type="hidden" id="current-lng" />
+          <input type="hidden" id="current-tz" />
+          <button type="button" class="btn-rev-geo" id="current-use-birth" data-i18n="current_use_birth">Использовать город рождения</button>
+        </div>
+
+        <div class="transit-block hidden" id="transit-block">
+          <h3 data-i18n="transit_date_title">Дата транзита</h3>
+          <div class="row">
+            <label data-i18n="date_cap">Дата
+              <input type="date" id="transit-date" />
+            </label>
+            <label data-i18n="time">Время
+              <input type="time" id="transit-time" value="12:00" />
+            </label>
+          </div>
+        </div>
+
+        <div class="transit-block hidden" id="synastry-block">
+          <h3 data-i18n="syn_second_person">Второй человек</h3>
+          <label class="b-saved-wrap hidden" id="b-saved-wrap" data-i18n="syn_from_saved">Из сохранённых карт
+            <select id="b-saved"><option value=""></option></select>
+          </label>
+          <label data-i18n="name">Имя
+            <input type="text" id="b-name" data-i18n-ph="name_ph" placeholder="Например, Иван" />
+          </label>
+          <div class="row">
+            <label data-i18n="birth_date">Дата рождения
+              <input type="date" id="b-date" />
+            </label>
+            <label data-i18n="time">Время
+              <input type="time" id="b-time" value="12:00" />
+            </label>
+          </div>
+          <details class="manual-coords">
+            <summary data-i18n="dst_disambiguation">Уточнение времени при переводе часов</summary>
+            <label data-i18n="dst_choice">Какой повторяющийся час использовать
+              <select id="b-is-dst">
+                <option value="" data-i18n="dst_auto">Определить автоматически</option>
+                <option value="true" data-i18n="dst_first">Первый час — летнее время</option>
+                <option value="false" data-i18n="dst_second">Второй час — стандартное время</option>
+              </select>
+            </label>
+          </details>
+          <label data-i18n="birth_city">Город рождения
+            <div class="autocomplete">
+              <input type="text" id="b-city" data-i18n-ph="city_ph" placeholder="Начните вводить город…" autocomplete="off" />
+              <ul id="b-city-results" class="suggestions hidden"></ul>
+            </div>
+          </label>
+
+          <div class="geo-confirm hidden" id="b-geo-confirm"></div>
+
+          <details class="manual-coords">
+            <summary data-i18n="manual_coords">Координаты вручную</summary>
+            <div class="row">
+              <label data-i18n="lat">Широта
+                <input type="number" id="b-lat" step="any" placeholder="59.9311" />
+              </label>
+              <label data-i18n="lng">Долгота
+                <input type="number" id="b-lng" step="any" placeholder="30.3609" />
+              </label>
+            </div>
+          </details>
+          <input type="hidden" id="b-tz" />
+        </div>
+
+        <div class="transit-block hidden" id="return-block">
+          <h3 data-i18n="return_chart_title">Карта возвращения</h3>
+          <div class="row">
+            <label><span data-i18n="return_type">Тип</span>
+              <select id="return-type">
+                <option value="Solar" data-i18n="return_solar_opt">Соляр — год</option>
+                <option value="Lunar" data-i18n="return_lunar_opt">Лунар — месяц</option>
+              </select>
+            </label>
+            <label id="return-year-label"><span data-i18n="return_year_cap">Год</span>
+              <input type="number" id="return-year" placeholder="2026" min="1" max="3000" />
+            </label>
+            <label id="return-month-label" class="hidden"><span data-i18n="return_month_cap">Месяц</span>
+              <select id="return-month"></select>
+            </label>
+          </div>
+          <p class="hint" id="return-hint" style="margin-top:0"></p>
+        </div>
+
+        <div class="transit-block hidden" id="progression-block">
+          <h3 data-i18n="prog_date_title">Дата прогрессии</h3>
+          <div class="row">
+            <label data-i18n="date_cap">Дата
+              <input type="date" id="prog-date" />
+            </label>
+            <label data-i18n="time">Время
+              <input type="time" id="prog-time" value="12:00" />
+            </label>
+          </div>
+          <p class="hint" style="margin-top:0" data-i18n="prog_hint">Вторичные прогрессии (день = год) + дирекции солнечной дуги на указанную дату.</p>
+        </div>
+
+        <div class="transit-block hidden" id="calendar-block">
+          <h3 data-i18n="cal_period_title">Период календаря</h3>
+          <div class="row">
+            <label data-i18n="period_from">С
+              <input type="date" id="cal-start" />
+            </label>
+            <label data-i18n="period_to">По
+              <input type="date" id="cal-end" />
+            </label>
+          </div>
+          <p class="hint" style="margin-top:0" data-i18n="cal_hint">Даты точных транзитов медленных планет к натальной карте (без Луны и осей). Максимум 2 года.</p>
+        </div>
+
+        <div class="transit-block hidden" id="forecast-block">
+          <h3 data-i18n="fc_period_title">Период прогноза</h3>
+          <div class="row">
+            <label data-i18n="period_from">С
+              <input type="date" id="fc-start" />
+            </label>
+            <label data-i18n="period_to">По
+              <input type="date" id="fc-end" />
+            </label>
+          </div>
+          <p class="hint" style="margin-top:0" data-i18n="fc_hint">Профекция (хозяин года), прогрессивная Луна и ключевые транзиты медленных планет с трактовкой. Максимум 3 года.</p>
+        </div>
+
+        <div class="transit-block hidden" id="rect-block">
+          <h3 data-i18n="rect_title">Ректификация времени</h3>
+          <p class="hint" style="margin-top:0" data-i18n="rect_hint">Не знаете точное время рождения? Укажите события жизни и/или опишите себя в анкете по Асценденту — подберём наиболее вероятное время.</p>
+          <p class="rect-key-note" data-i18n="rect_key_note">⭐ Главное для точности: заполните «Анкету по Асценденту» и «Предрасположенности» — они надёжно определяют восходящий знак (окно ~2 ч). По одним только событиям время определить нельзя.</p>
+          <div class="row" id="rect-mode-switch">
+            <label class="consent-row">
+              <input type="radio" name="rect-mode" value="range" checked />
+              <span data-i18n="rect_mode_range">Диапазон времени</span>
+            </label>
+            <label class="consent-row">
+              <input type="radio" name="rect-mode" value="window" />
+              <span data-i18n="rect_mode_window">Примерное время ± окно</span>
+            </label>
+          </div>
+          <div id="rect-range-fields">
+            <div class="row">
+              <label data-i18n="rect_from">Время с
+                <input type="time" id="rect-start" value="00:00" />
+              </label>
+              <label data-i18n="rect_to">Время по
+                <input type="time" id="rect-end" value="23:59" />
+              </label>
+            </div>
+            <label data-i18n="rect_step">Шаг перебора
+              <select id="rect-step">
+                <option value="5" data-i18n="rect_step_5">5 минут (точнее, дольше)</option>
+                <option value="10" data-i18n="rect_step_10">10 минут</option>
+                <option value="15" selected data-i18n="rect_step_15">15 минут</option>
+                <option value="20" data-i18n="rect_step_20">20 минут</option>
+                <option value="30" data-i18n="rect_step_30">30 минут (быстро)</option>
+              </select>
+            </label>
+          </div>
+          <div id="rect-window-fields" class="hidden">
+            <div class="row">
+              <label data-i18n="rect_center">Примерное время рождения
+                <input type="time" id="rect-center" value="12:00" />
+              </label>
+              <label data-i18n="rect_window">Окно перебора
+                <select id="rect-window">
+                  <option value="60" data-i18n="rect_window_60">±1 час</option>
+                  <option value="120" selected data-i18n="rect_window_120">±2 часа</option>
+                  <option value="180" data-i18n="rect_window_180">±3 часа</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="rect-sub-title" data-i18n="rect_events_title">События жизни</div>
+          <p class="hint" style="margin-top:2px" data-i18n="rect_events_hint">Браки, переезды, рождение детей, потери, травмы — дата и краткое описание.</p>
+          <div class="rect-events" id="rect-events"></div>
+          <button type="button" id="rect-add-event" class="save-btn">＋ <span data-i18n="rect_add_event">Добавить событие</span></button>
+
+          <details class="rect-asc" id="rect-asc">
+            <summary data-i18n="rect_asc_title">Анкета по Асценденту (опишите себя)</summary>
+            <p class="hint" data-i18n="rect_asc_hint">Выберите по одному варианту в каждом пункте — это поможет уточнить восходящий знак, даже если событий мало.</p>
+            <div id="rect-asc-q"></div>
+          </details>
+
+          <details class="rect-asc" id="rect-pred">
+            <summary data-i18n="rect_pred_title">Предрасположенности (что про вас?)</summary>
+            <p class="hint" data-i18n="rect_pred_hint">Отметьте редкие, но «читаемые» в карте особенности судьбы. Это сильно уточняет время (признаки зависят от домов).</p>
+            <div id="rect-pred-list"></div>
+            <div class="row" style="margin-top:12px">
+              <label data-i18n="rect_parent_mother">Знак Солнца мамы
+                <select id="rect-parent-mother"></select>
+              </label>
+              <label data-i18n="rect_parent_father">Знак Солнца папы
+                <select id="rect-parent-father"></select>
+              </label>
+            </div>
+            <p class="hint" data-i18n="rect_parent_hint">Тай-брейк: если Асцендент неоднозначен, он обычно совпадает со знаком Солнца одного из родителей.</p>
+          </details>
+        </div>
+
+        <div class="transit-block hidden" id="vedic-block">
+          <h3 data-i18n="tab_vedic">Панчанг</h3>
+          <p class="hint" style="margin-top:0" data-i18n="vedic_hint">Ведический календарь…</p>
+          <label data-i18n="vedic_month">Месяц
+            <input type="month" id="vedic-month" />
+          </label>
+          <label class="consent-row" style="margin-top:6px">
+            <input type="checkbox" id="vedic-personalize" checked />
+            <span data-i18n="vedic_personalize">Учитывать мои данные (Тарабала)</span>
+          </label>
+        </div>
+
+        <datalist id="event-suggestions"></datalist>
+
+        <button type="submit" class="btn-primary" id="calc-btn">
+          <span class="btn-text">Рассчитать</span>
+        </button>
+        <button type="button" class="btn-sample" id="sample-btn" data-i18n="sample_btn">✦ Показать пример</button>
+      </form>
+
+      <div class="saved-block hidden" id="saved-block">
+        <h3 data-i18n="my_charts">Мои карты</h3>
+        <button type="button" id="save-current" class="save-btn" data-i18n="save_current">＋ Сохранить текущие данные</button>
+        <ul id="saved-list" class="saved-list"></ul>
+      </div>
+
+      <p class="hint" data-i18n="hint_offline">Если интернет недоступен — введите широту/долготу вручную, часовой пояс определится по координатам офлайн.</p>
+    </aside>
+
+    <!-- Результаты -->
+    <section class="panel result-panel">
+      <div class="tabs">
+        <button class="tab active" data-mode="natal" data-i18n="tab_natal" data-i18n-title="tt_natal">Натальная карта</button>
+        <button class="tab" data-mode="transit" data-i18n="tab_transit" data-i18n-title="tt_transit">Транзиты</button>
+        <button class="tab" data-mode="synastry" data-i18n="tab_synastry" data-i18n-title="tt_synastry">Синастрия</button>
+        <button class="tab" data-mode="return" data-i18n="tab_return" data-i18n-title="tt_return">Соляр / Лунар</button>
+        <button class="tab" data-mode="progression" data-i18n="tab_progression" data-i18n-title="tt_progression">Прогрессии</button>
+        <button class="tab" data-mode="calendar" data-i18n="tab_calendar" data-i18n-title="tt_calendar">Календарь</button>
+        <button class="tab" data-mode="forecast" data-i18n="tab_forecast" data-i18n-title="tt_forecast">Прогноз</button>
+        <button class="tab" data-mode="rectification" data-i18n="tab_rectification" data-i18n-title="tt_rectification">Ректификация</button>
+        <button class="tab" data-mode="vedic" data-i18n="tab_vedic" data-i18n-title="tt_vedic">Панчанг</button>
+      </div>
+
+      <div id="daily-block" class="daily-block hidden"></div>
+
+      <div id="placeholder" class="placeholder">
+        <div class="placeholder-glyph">✷</div>
+        <p data-i18n="placeholder">Заполните данные рождения и нажмите «Рассчитать», чтобы увидеть карту, положения планет, дома и аспекты.</p>
+      </div>
+
+      <div id="loader" class="loader hidden"><div class="spinner"></div><span data-i18n="loading">Считаем эфемериды…</span></div>
+      <div id="error" class="error hidden"></div>
+
+      <div id="result-toolbar" class="result-toolbar hidden">
+        <button id="result-pdf" class="result-print-btn" data-i18n="result_pdf">📄 Скачать PDF</button>
+        <button id="result-print" class="result-print-btn" data-i18n="result_print">🖨 Печать</button>
+      </div>
+
+      <div id="results" class="results hidden">
+        <label id="simple-toggle-row" class="simple-toggle hidden">
+          <input type="checkbox" id="simple-mode" />
+          <span data-i18n="simple_mode">Простыми словами — без астрологических терминов</span>
+        </label>
+        <div class="chart-area" id="chart-area">
+          <div id="chart-svg" class="chart-svg"></div>
+          <button type="button" id="chart-png-btn" class="chart-png-btn hidden" data-i18n="save_png">🖼 Сохранить карту (PNG)</button>
+          <div class="summary" id="summary"></div>
+        </div>
+
+        <div id="portrait" class="portrait hidden"></div>
+        <div id="psych" class="portrait hidden"></div>
+        <button id="deep-report-btn" class="btn-deep hidden" data-i18n="deep_report">📖 Подробный разбор</button>
+        <div id="spheres" class="portrait hidden"></div>
+        <div id="story" class="story-view hidden"></div>
+
+        <div id="forecast-view" class="hidden">
+          <div class="summary" id="forecast-summary"></div>
+          <div id="forecast-blocks" class="portrait"></div>
+          <h3 class="forecast-events-title" data-i18n="fc_key_transits">Ключевые транзиты периода</h3>
+          <div id="forecast-list" class="calendar-list"></div>
+        </div>
+
+        <div id="calendar-view" class="hidden">
+          <div class="summary" id="calendar-summary"></div>
+          <div id="calendar-grids" class="cal-months"></div>
+          <div id="calendar-detail" class="vedic-detail"></div>
+        </div>
+
+        <div id="vedic-view" class="hidden">
+          <div class="vedic-head" id="vedic-head"></div>
+          <div class="vedic-grid" id="vedic-grid"></div>
+          <div class="vedic-detail" id="vedic-detail"></div>
+        </div>
+
+        <div id="rect-view" class="hidden">
+          <div id="rect-best" class="rect-best"></div>
+          <div id="rect-luminary"></div>
+          <h3 class="forecast-events-title" data-i18n="rect_top_title">Наиболее вероятные времена</h3>
+          <div id="rect-candidates" class="rect-candidates"></div>
+          <h3 class="forecast-events-title" data-i18n="rect_why_title">Почему это время: совпадения по событиям</h3>
+          <div class="table-wrap"><table id="rect-breakdown"></table></div>
+          <p class="info-disclaimer" style="margin-top:16px" data-i18n="rect_disclaimer">Ректификация — вспомогательный инструмент: она предлагает вероятные времена по астрологическим совпадениям, но итоговое время стоит подтвердить у астролога и сверить с характером и внешностью.</p>
+        </div>
+
+        <div class="data-grids" id="data-grids">
+          <div class="data-section hidden" id="interp-section">
+            <h3 id="interp-section-title" data-i18n="sec_interp">Интерпретации</h3>
+            <div id="interp-list" class="interp-list"></div>
+          </div>
+
+          <details class="data-section collapsible">
+            <summary><h3 id="planets-title" data-i18n="sec_planets">Положения планет</h3><span class="expand-hint" data-i18n="expand_hint">нажмите, чтобы развернуть</span></summary>
+            <div class="table-wrap"><table id="planets-table"></table></div>
+          </details>
+
+          <details class="data-section collapsible" id="houses-section">
+            <summary><h3 id="houses-section-title" data-i18n="sec_houses">Дома</h3><span class="expand-hint" data-i18n="expand_hint">нажмите, чтобы развернуть</span></summary>
+            <div class="table-wrap"><table id="houses-table"></table></div>
+          </details>
+
+          <details class="data-section collapsible" open>
+            <summary><h3 id="aspects-title" data-i18n="sec_aspects">Аспекты</h3></summary>
+            <p class="section-note" id="aspects-note" data-i18n="aspects_note">Наведите на строку аспекта, чтобы увидеть трактовку.</p>
+            <div class="table-wrap"><table id="aspects-table"></table></div>
+          </details>
+        </div>
+
+        <div id="guest-teaser" class="guest-teaser hidden">
+          <h3 data-i18n="teaser_title">Что ещё расскажут ваши звёзды</h3>
+          <p class="teaser-sub" data-i18n="teaser_sub">Натальная карта — только начало. С бесплатным аккаунтом откроется больше.</p>
+          <div class="teaser-grid">
+            <div class="teaser-card"><span class="teaser-ic">🪐</span><b data-i18n="teaser_transit_t">Транзиты и прогноз</b><span data-i18n="teaser_transit_d">Что происходит с вами сейчас и что впереди</span></div>
+            <div class="teaser-card"><span class="teaser-ic">❤️</span><b data-i18n="teaser_syn_t">Синастрия</b><span data-i18n="teaser_syn_d">Совместимость с партнёром по картам двоих</span></div>
+            <div class="teaser-card"><span class="teaser-ic">🌗</span><b data-i18n="teaser_ret_t">Соляр и прогрессии</b><span data-i18n="teaser_ret_d">Тема года и долгосрочные тенденции</span></div>
+            <div class="teaser-card"><span class="teaser-ic">💾</span><b data-i18n="teaser_save_t">Сохранение карт</b><span data-i18n="teaser_save_d">Свои и близких — всегда под рукой в кабинете</span></div>
+          </div>
+          <button id="teaser-register" class="btn-primary" data-i18n="teaser_cta">Зарегистрироваться бесплатно</button>
+        </div>
+
+        <div id="locked-preview" class="locked-preview hidden"></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="sky-now" id="sky-now">
+    <h2 class="sky-now-title" data-i18n="sky_now_title">🪐 Небо сейчас</h2>
+    <p class="sky-now-sub" data-i18n="sky_now_sub">Где сейчас планеты, на какой период и что это значит — общий фон для всех, без регистрации.</p>
+    <div id="sky-now-grid" class="sky-now-grid" aria-live="polite"></div>
+  </section>
+
+  <section class="info-section">
+    <details id="archetypes-details">
+      <summary data-i18n="archetypes_summary">Как понять себя и других — архетипы знаков</summary>
+      <div class="info-body">
+        <p data-i18n="archetypes_intro">Каждый знак — это архетип, психологический «тип энергии». У любого знака есть здоровое (сильное) и теневое (искажённое) проявление. Понимание архетипа помогает увидеть мотивы — свои и окружающих.</p>
+        <div id="archetypes-grid" class="archetypes-grid"></div>
+      </div>
+    </details>
+    <details>
+      <summary data-i18n="method_summary">О методике и точности расчётов</summary>
+      <div class="info-body">
+        <p data-i18n-html="method_ephemeris"><strong>Эфемериды.</strong> Положения планет, светил и фиктивных точек вычисляются с помощью <em>Swiss Ephemeris</em> — того же высокоточного эфемеридного движка, что используется в профессиональных астрологических программах. Точность положений — доли угловой секунды.</p>
+        <p data-i18n-html="method_houses"><strong>Дома.</strong> Доступны 8 систем домов: Плацидус (по умолчанию, наиболее распространённая), Кох, Региомонтан, Кампано, равнодомная, цельнознаковая (Whole Sign), Алькабитиус и Морин. Для корректного расчёта домов и Асцендента важно указать точное время рождения.</p>
+        <p data-i18n-html="method_aspects"><strong>Аспекты.</strong> Учитываются мажорные и минорные аспекты с принятыми орбисами. Характер аспекта (гармоничный, напряжённый, нейтральный) обозначен цветом.</p>
+        <p data-i18n-html="method_dignities"><strong>Достоинства.</strong> Эссенциальные достоинства планет (обитель, экзальтация, изгнание, падение) рассчитываются по традиционной системе управителей и показывают силу планеты в знаке.</p>
+        <p data-i18n-html="method_rulers"><strong>Управители и традиция.</strong> Управитель карты, хозяин года и достоинства считаются по <em>традиционным</em> управителям (Скорпион — Марс, Водолей — Сатурн, Рыбы — Юпитер), а высшие планеты (Уран, Нептун, Плутон) показаны в карте как со-управители современной школы. Дополнительно учитываются классические факторы: <em>карта дня или ночи</em> (секта — рождение днём/ночью) и <em>Жребий Фортуны</em>.</p>
+        <p data-i18n-html="method_forecast"><strong>Прогностика.</strong> Годовая профекция строится по <em>цельнознаковой</em> системе (один знак — один год жизни), даже когда натальная карта рассчитана в Плацидусе — это принятая практика традиционной астрологии. Прогрессии — вторичные (день за год), дирекции — солнечной дугой.</p>
+        <p data-i18n-html="method_interp"><strong>Интерпретации.</strong> Тексты формируются по классическим астрологическим принципам и носят рекомендательный характер. Натальная карта описывает потенциал и тенденции, а не предопределённость: то, как реализуются её указания, зависит от самого человека.</p>
+        <p class="info-disclaimer" data-i18n="method_disclaimer">Сервис предназначен для самопознания и образования и не заменяет консультацию специалиста по вопросам здоровья, финансов или права.</p>
+      </div>
+    </details>
+    <details id="glossary-details">
+      <summary data-i18n="glossary_title">Словарь терминов</summary>
+      <div class="info-body">
+        <p data-i18n="glossary_hint">Короткие пояснения основных понятий — чтобы результаты были понятнее.</p>
+        <div id="glossary-grid" class="glossary-grid"></div>
+      </div>
+    </details>
+    <a class="info-link" href="/about" data-i18n="ab_about_link">Об авторе</a>
+  </section>
+
+  <section class="app-cta">
+    <h3 data-i18n="app_cta_title">📱 Приложение для Android</h3>
+    <p data-i18n="app_cta_desc">Натальная карта офлайн, транзиты и лунный календарь — в кармане.</p>
+    <div class="app-cta-row">
+      <div class="app-badges">
+        <a class="store-btn" href="/astrosmap.apk" download>
+          <svg class="sb-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <g fill="#7FC94B">
+              <rect x="7" y="9" width="10" height="8" rx="1.2"/>
+              <path d="M7.6 9a4.4 4.4 0 0 1 8.8 0z"/>
+              <rect x="4.2" y="10" width="1.8" height="6" rx=".9"/>
+              <rect x="18" y="10" width="1.8" height="6" rx=".9"/>
+              <rect x="8.8" y="16.4" width="1.8" height="4" rx=".9"/>
+              <rect x="13.4" y="16.4" width="1.8" height="4" rx=".9"/>
+            </g>
+            <circle cx="10" cy="6.4" r=".55" fill="#100e24"/>
+            <circle cx="14" cy="6.4" r=".55" fill="#100e24"/>
+            <path d="M9 4.4 8.1 3.2M15 4.4 15.9 3.2" stroke="#7FC94B" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+          <span class="sb-text"><span class="sb-top" data-i18n="app_badge_install">Скачайте</span><span class="sb-name" data-i18n="app_badge_apkfile">APK-файл</span></span>
+        </a>
+        <a class="store-btn" href="https://www.rustore.ru/catalog/app/ru.astrosmap.app" target="_blank" rel="noopener">
+          <img class="sb-icon" src="/img/rustore.svg" width="30" height="30" alt="" aria-hidden="true" />
+          <span class="sb-text"><span class="sb-top" data-i18n="app_badge_from">Скачайте из</span><span class="sb-name">RuStore</span></span>
+        </a>
+        <a class="store-btn" href="https://appgallery.cloud.huawei.com/ag/n/app/C118378621" target="_blank" rel="noopener">
+          <img class="sb-icon" src="/img/appgallery.png" width="30" height="30" alt="" aria-hidden="true" />
+          <span class="sb-text"><span class="sb-top" data-i18n="app_badge_openin">Откройте в</span><span class="sb-name">AppGallery</span></span>
+        </a>
+        <a class="store-btn" href="https://play.google.com/store/apps/details?id=ru.astrosmap.app" target="_blank" rel="noopener">
+          <svg class="sb-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#00D0FF" d="M3.9 2.4a1.4 1.4 0 0 0-.4 1v17.2c0 .4.1.8.4 1l9.7-9.6z"/>
+            <path fill="#00E676" d="m13.6 12 3.2-3.2L6 2.6c-.5-.3-1-.4-1.5-.3L13.6 12z"/>
+            <path fill="#FFD200" d="m16.8 8.8-3.2 3.2 3.2 3.2 4-2.3c1-.6 1-1.9 0-2.5z"/>
+            <path fill="#FF3A44" d="M3.9 21.6c.4.3 1 .3 1.6 0l11.3-6.4-3.2-3.2z"/>
+          </svg>
+          <span class="sb-text"><span class="sb-top" data-i18n="app_badge_from">Скачайте из</span><span class="sb-name">Google Play</span></span>
+        </a>
+      </div>
+      <div class="app-qr-row">
+        <figure class="app-qr">
+          <img src="/img/apk-qr.svg" width="104" height="104" alt="QR" />
+          <figcaption data-i18n="app_qr_apk">Скачать APK</figcaption>
+        </figure>
+        <figure class="app-qr">
+          <a href="https://play.google.com/store/apps/details?id=ru.astrosmap.app" target="_blank" rel="noopener">
+            <img src="/img/google-play-qr.svg" width="104" height="104" alt="QR Google Play" />
+          </a>
+          <figcaption>Google Play</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="app-qr-hint" data-i18n="app_qr_cap">Наведите камеру телефона</p>
+  </section>
+
+  <footer class="site-footer">
+    <p data-i18n="footer">Расчёты выполняются Swiss Ephemeris через Kerykeion. Создано для самопознания и образования.</p>
+    <p class="footer-legal">
+      <a href="#" id="footer-privacy" data-i18n="footer_privacy">Политика обработки персональных данных</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="#" id="footer-terms" data-i18n="footer_terms">Пользовательское соглашение</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="#" id="footer-offer" data-i18n="footer_offer">Публичная оферта</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span class="age-badge" data-i18n-title="age_badge_title" title="Сервис предназначен для лиц старше 18 лет">18+</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="https://github.com/shubinarti-glitch/astro-calculator-source" id="footer-source" target="_blank" rel="noopener" data-i18n="footer_source">Исходный код</a>
+    </p>
+    <p class="footer-disclaimer info-disclaimer" data-i18n="footer_disclaimer">Сервис носит информационно-развлекательный характер, не гарантирует достоверность прогнозов и не заменяет консультацию специалиста. Оператор — Шубин Артём Иванович, самозанятый (НПД), ИНН 245010711934, e-mail: astrosmap@yandex.ru.</p>
+  </footer>
+
+  <button id="scroll-top" class="scroll-top hidden" aria-label="Наверх" data-i18n-title="scroll_top_title" title="Наверх">↑</button>
+
+  <button id="support-btn" class="support-btn" aria-label="Написать в поддержку" data-i18n-title="support_title" title="Написать в поддержку">💬</button>
+  <div id="support-panel" class="support-panel hidden">
+    <div class="support-head">
+      <span data-i18n="support_head">Написать в поддержку</span>
+      <button id="support-close" class="support-close" aria-label="Закрыть">×</button>
+    </div>
+    <p class="support-hint" data-i18n="support_hint">Опишите вопрос — ответим на вашу почту.</p>
+    <input type="text" id="support-name" data-i18n-ph="support_name_ph" placeholder="Как к вам обращаться" maxlength="80" />
+    <input type="email" id="support-email" data-i18n-ph="support_email_ph" placeholder="Ваша почта для ответа" />
+    <textarea id="support-message" rows="4" data-i18n-ph="support_msg_ph" placeholder="Ваше сообщение…"></textarea>
+    <label class="consent-item support-consent">
+      <input type="checkbox" id="support-consent" />
+      <span data-i18n-html="support_consent">Я даю согласие на обработку данных обращения согласно <a href="/privacy.html" id="support-privacy-link">Политике обработки персональных данных</a>.</span>
+    </label>
+    <button id="support-send" class="btn-primary" data-i18n="support_send">Отправить</button>
+    <p id="support-status" class="support-status hidden"></p>
+  </div>
+
+  <script src="/js/i18n.js?v=35"></script>
+  <script src="/js/app.js?v=36"></script>
+</body>
+</html>
