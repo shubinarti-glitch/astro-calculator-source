@@ -745,6 +745,7 @@ const I18N = {
     privacy_p7: "<strong>7. Права и удаление.</strong> Пользователь может исправлять данные, отключить рассылку, удалить отдельные материалы и удалить аккаунт через кабинет либо направить запрос на astrosmap@yandex.ru. Отзыв согласия производится тем же способом. Для защиты аккаунта может потребоваться подтверждение личности.",
     privacy_p8: "<strong>8. Последствия удаления.</strong> После подтверждения запроса аккаунт и связанные данные удаляются либо обезличиваются, кроме сведений, которые оператор обязан хранить по закону. Данные могут оставаться в резервных копиях не более 30 дней.",
     privacy_p9: "<strong>9. Данные третьих лиц.</strong> Вводя данные рождения другого человека, пользователь подтверждает наличие законного основания и его согласия.",
+    privacy_mobile_note: "<a href=\"/mobile-privacy.html\">Добровольные мобильные отчёты: дополнение от 24.09.2026, отдельные сроки хранения и отключение.</a>",
     privacy_p10: "<strong>10. Изменения.</strong> Актуальная версия Политики публикуется на astrosmap.ru/privacy.html. Версия документа: 2026-09-01.",
     privacy_disclaimer: "Сервис носит образовательно-развлекательный характер и не оказывает медицинских, юридических или финансовых услуг.",
 
@@ -1567,6 +1568,7 @@ const I18N = {
     privacy_p7: "<strong>7. Rights and deletion.</strong> Users may correct data, disable newsletters, delete individual materials, and delete an account in the account area or request this at astrosmap@yandex.ru. Consent may be withdrawn in the same ways. Identity confirmation may be required for security.",
     privacy_p8: "<strong>8. Effect of deletion.</strong> After confirmation, the account and associated data are deleted or anonymised except where retention is legally required. Data may remain in backups for no more than 30 days.",
     privacy_p9: "<strong>9. Third-party data.</strong> By entering another person's birth details, the user confirms a lawful basis and that person's consent.",
+    privacy_mobile_note: "<a href=\"/mobile-privacy.html?lang=en\">Optional mobile reports: supplement of 24 September 2026, separate retention periods and withdrawal.</a>",
     privacy_p10: "<strong>10. Changes.</strong> The current Policy is published at astrosmap.ru/privacy.html. Document version: 2026-09-01.",
     privacy_disclaimer: "The Service is educational and entertainment in nature and does not provide medical, legal or financial services.",
 

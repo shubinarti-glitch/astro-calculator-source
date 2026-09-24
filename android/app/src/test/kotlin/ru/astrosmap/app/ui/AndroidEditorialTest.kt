@@ -9,6 +9,35 @@ import ru.astrosmap.app.ui.tools.LunarTexts
 
 /** Plain JVM: first access requires neither Android Context nor an Activity/network. */
 class AndroidEditorialTest {
+    @Test fun failedNetworkRefreshClearsPreviouslyLoadedContent() = kotlinx.coroutines.runBlocking {
+        val remote = ru.astrosmap.app.editorial.RemoteEditorial
+        val api = java.lang.reflect.Proxy.newProxyInstance(
+            ru.astrosmap.app.data.api.AstroApi::class.java.classLoader,
+            arrayOf(ru.astrosmap.app.data.api.AstroApi::class.java)
+        ) { _, _, _ -> throw java.io.IOException("offline") } as ru.astrosmap.app.data.api.AstroApi
+        try {
+            remote.accept(ru.astrosmap.app.editorial.EditorialPackage(1,
+                remote.cardIds.map { listOf(it, "test ru", "test en", "server ru", "server en", "advice ru", "advice en") },
+                (1..8).map { listOf("phase$it", "ru", "en") },
+                (1..12).map { listOf("sign$it", "ru", "en") }))
+            remote.refresh(api)
+            assertEquals(remote.unavailable(true), TarotDeck.cards.first().meaningRu)
+        } finally { remote.clear() }
+    }
+    @Test fun remoteContentUpdatesExistingCardAndClearsToNeutralFallback() {
+        val remote = ru.astrosmap.app.editorial.RemoteEditorial
+        remote.clear()
+        val card = TarotDeck.cards.first()
+        assertEquals(remote.unavailable(true), card.meaningRu)
+        try {
+            remote.accept(ru.astrosmap.app.editorial.EditorialPackage(1,
+                remote.cardIds.map { listOf(it, "test ru", "test en", "server ru", "server en", "advice ru", "advice en") },
+                (1..8).map { listOf("phase$it", "ru", "en") },
+                (1..12).map { listOf("sign$it", "ru", "en") }))
+            assertEquals("server ru", card.meaningRu)
+        } finally { remote.clear() }
+        assertEquals(remote.unavailable(true), card.meaningRu)
+    }
     @Test fun offlineSynchronousDataAndStableSavedIds() {
         val cards = TarotDeck.cards
         assertEquals(78, cards.size)
@@ -64,8 +93,8 @@ class AndroidEditorialTest {
             Locale.setDefault(Locale.forLanguageTag("ru"))
             assertEquals(ruAdvice, phases.map { LunarTexts.phaseAdvice(it) })
             assertEquals(ruMoods, signs.map { LunarTexts.moonMood(it) })
-            assertEquals("", LunarTexts.phaseAdvice("unknown"))
-            assertEquals("", LunarTexts.moonMood("unknown"))
+            assertEquals(ru.astrosmap.app.editorial.RemoteEditorial.unavailable(true), LunarTexts.phaseAdvice("unknown"))
+            assertEquals(ru.astrosmap.app.editorial.RemoteEditorial.unavailable(true), LunarTexts.moonMood("unknown"))
             assertEquals("unknown", LunarTexts.phaseName("unknown"))
         } finally {
             Locale.setDefault(previous)

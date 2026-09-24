@@ -63,6 +63,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Астрология — натальная карта и транзиты", version="0.1.0", lifespan=lifespan)
 app.include_router(glossary_router)
+from .mobile_editorial import router as mobile_editorial_router
+app.include_router(mobile_editorial_router)
 
 
 @app.exception_handler(HTTPException)
@@ -675,6 +677,11 @@ def require_admin(uid: int = Depends(current_user_id)) -> int:
     if not db.is_admin(uid):
         raise HTTPException(status_code=403, detail="Доступ только для администратора")
     return uid
+
+
+from .mobile_reports import ReportStore, create_router as mobile_reports_router
+
+app.include_router(mobile_reports_router(ReportStore(db.DATA_DIR / "mobile-reports.json"), require_admin))
 
 
 @app.get("/api/admin/stats")

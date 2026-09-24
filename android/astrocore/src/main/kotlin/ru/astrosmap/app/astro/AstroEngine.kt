@@ -37,6 +37,9 @@ class AstroEngine(ephePath: String?) {
         )
     }
 
+    // SwissEph mutates shared calculation buffers. Screens and workers use one
+    // injected engine, so each complete calculation must hold the same monitor.
+    @Synchronized
     fun natal(b: BirthInput): NatalChart {
         val jd = julianDayUt(b)
         val (points, houses, angles) = calcChart(jd, b)
@@ -54,6 +57,7 @@ class AstroEngine(ephePath: String?) {
         )
     }
 
+    @Synchronized
     fun transit(natal: BirthInput, transit: BirthInput): TransitChart {
         val natalChart = calcChart(julianDayUt(natal), natal)
         val jdT = julianDayUt(transit)

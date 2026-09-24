@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forecast_sphere_basis">What this forecast is based on</string>
+    <string name="forecast_sphere_no_events">The server returned no key events for this area in the selected period. This does not mean that nothing will happen in your life.</string>
+    <string name="forecast_sphere_text_unavailable">An explanation for this event was not received from the server.</string>
+</resources>

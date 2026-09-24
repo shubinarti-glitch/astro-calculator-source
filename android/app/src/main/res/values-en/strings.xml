@@ -184,7 +184,7 @@
     <string name="today_domain_communication">Communication</string>
     <string name="today_domain_productivity">Productivity</string>
     <string name="today_forecast_title">Daily forecast</string>
-    <string name="today_forecast_text">Today you may find support in %1$s. Give %2$s a little more attention: avoid rushing and consider the circumstances.</string>
+    <string name="today_forecast_text">Highest calculated indicator: %1$s. Lowest: %2$s.</string>
     <string name="today_next_event_title">Next notable event</string>
     <string name="today_next_event_loading">Checking your personal transits for the next 14 days…</string>
     <string name="today_next_event_none">No prominent personal aspects were found for the next 14 days. This does not rule out ordinary changes or events in daily life.</string>
@@ -193,7 +193,7 @@
         <item quantity="one">in %1$d day</item>
         <item quantity="other">in %1$d days</item>
     </plurals>
-    <string name="today_next_event_advice">This influence may bring its associated theme into greater focus. Observe the circumstances and choose an approach that works for you.</string>
+    <string name="today_next_event_advice">The date and participants of the calculated aspect are shown here, without a written interpretation.</string>
     <string name="premium_cta">✦ Premium — subscribe on the website</string>
     <string name="picker_chart">Chart:</string>
     <string name="acc_glossary">Glossary</string>

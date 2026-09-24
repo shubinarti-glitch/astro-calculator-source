@@ -13,87 +13,7 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
-/** Build-only private data: no Context, I/O or asynchronous loading in the APK. */
-abstract class GenerateAndroidEditorial : DefaultTask() {
-    @get:InputFiles
-    @get:PathSensitive(PathSensitivity.NONE)
-    abstract val packageFile: RegularFileProperty
-
-    @get:OutputDirectory
-    abstract val outputDirectory: DirectoryProperty
-
-    @TaskAction
-    fun generate() {
-        val file = packageFile.get().asFile
-        if (!file.isFile) throw GradleException(
-            "Missing private Android editorial package: $file. Restore data/editorial/android-v1.json " +
-                "or supply -PandroidEditorialFile=<absolute path>. No production/demo fallback is allowed."
-        )
-        val data = JsonSlurper().parse(file, "UTF-8") as? Map<*, *>
-            ?: throw GradleException("Invalid Android editorial package: expected object")
-        require(data["schemaVersion"] == 1) { "Unsupported Android editorial schema" }
-        require(data.keys == setOf("schemaVersion", "cards", "phaseAdvice", "moonMood"))
-        fun rows(key: String, size: Int, width: Int): List<List<String>> {
-            val values = data[key] as? List<*> ?: error("Missing editorial table: $key")
-            require(values.size == size) { "$key must contain $size entries" }
-            val result = values.map { row ->
-                require(row is List<*> && row.size == width) { "Invalid $key row" }
-                row.map { value ->
-                    require(value is String && value.isNotBlank()) { "Missing $key text/ID" }
-                    value
-                }
-            }
-            require(result.map { it[0] }.distinct().size == size) { "Duplicate $key IDs" }
-            return result
-        }
-        val cards = rows("cards", 78, 7)
-        val idsHash = MessageDigest.getInstance("SHA-256")
-            .digest(cards.joinToString("\n") { it[0] }.toByteArray(Charsets.UTF_8))
-            .joinToString("") { "%02x".format(it) }
-        require(idsHash == "25e07797a22b4977a67a24113c22c12d3a22aedc85636e605a4d51e49c8b5c53") {
-            "Tarot IDs/order changed; saved readings and artwork require the original 78 IDs"
-        }
-        val phases = rows("phaseAdvice", 8, 3)
-        val moods = rows("moonMood", 12, 3)
-        require(phases.map { it[0] } == listOf("New Moon", "Waxing Crescent", "First Quarter",
-            "Waxing Gibbous", "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent"))
-        require(moods.map { it[0] } == listOf("Ari", "Tau", "Gem", "Can", "Leo", "Vir",
-            "Lib", "Sco", "Sag", "Cap", "Aqu", "Pis"))
-        fun literal(value: String) = JsonOutput.toJson(value).replace("$", "\\$")
-        val source = buildString {
-            appendLine("// Generated from private editorial data. Do not publish this file.")
-            appendLine("package ru.astrosmap.app.editorial")
-            appendLine("import ru.astrosmap.app.ui.tarot.TarotCard")
-            appendLine("internal object AndroidEditorial {")
-            appendLine("    val cards: List<TarotCard> = listOf(")
-            cards.forEach { appendLine("        TarotCard(${it.joinToString(", ") { v -> literal(v) }}),") }
-            appendLine("    )")
-            for ((name, entries) in listOf("phaseAdvice" to phases, "moonMood" to moods)) {
-                appendLine("    val $name = mapOf(")
-                entries.forEach { appendLine("        ${literal(it[0])} to (${literal(it[1])} to ${literal(it[2])}),") }
-                appendLine("    )")
-            }
-            appendLine("}")
-        }
-        val target = outputDirectory.file("ru/astrosmap/app/editorial/AndroidEditorial.kt").get().asFile
-        target.parentFile.mkdirs()
-        target.writeText(source, Charsets.UTF_8)
-    }
-}
-
-val generateAndroidEditorial = tasks.register<GenerateAndroidEditorial>("generateAndroidEditorial") {
-    // InputFiles allows our actionable missing-package check, including after a prior build.
-    val configured = providers.gradleProperty("androidEditorialFile")
-    // Resolve at configuration time: deferred script closures cannot be stored
-    // in Gradle's configuration cache.
-    packageFile.set(configured.orNull?.let { file(it) }
-        ?: rootProject.file("../data/editorial/android-v1.json"))
-    outputDirectory.set(layout.buildDirectory.dir("generated/androidEditorial/kotlin"))
-    // Private text must not enter a shared Gradle build cache.
-    outputs.cacheIf { false }
-}
-
-tasks.named("preBuild") { dependsOn(generateAndroidEditorial) }
+// Editorial content is fetched at runtime; no private content build inputs.
 
 // Diagnostic runner support for Windows checkouts containing non-ASCII paths.
 // Uses the exact unit-test classpath; does not alter APK packaging or test rules.
@@ -121,7 +41,6 @@ kotlin {
 }
 
 android {
-    sourceSets.getByName("main").java.srcDir(generateAndroidEditorial.flatMap { it.outputDirectory })
     namespace = "ru.astrosmap.app"
     compileSdk = 36
 
@@ -129,8 +48,8 @@ android {
         applicationId = "ru.astrosmap.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 11
-        versionName = "1.7.3"
+        versionCode = 12
+        versionName = "1.7.4"
     }
 
     buildTypes {

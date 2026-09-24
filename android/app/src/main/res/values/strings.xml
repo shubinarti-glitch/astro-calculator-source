@@ -186,7 +186,7 @@
     <string name="today_domain_communication">Коммуникация</string>
     <string name="today_domain_productivity">Продуктивность</string>
     <string name="today_forecast_title">Прогноз дня</string>
-    <string name="today_forecast_text">Сегодня можно опереться на показатель «%1$s». Показателю «%2$s» полезно уделить больше внимания: не торопитесь и учитывайте обстоятельства.</string>
+    <string name="today_forecast_text">Наибольший расчётный показатель: «%1$s». Наименьший: «%2$s».</string>
     <string name="today_next_event_title">Ближайшее важное событие</string>
     <string name="today_next_event_loading">Проверяем персональные транзиты на ближайшие 14 дней…</string>
     <string name="today_next_event_none">В ближайшие 14 дней выраженных личных аспектов не найдено. Это не исключает обычных изменений и событий повседневной жизни.</string>
@@ -197,7 +197,7 @@
         <item quantity="many">через %1$d дней</item>
         <item quantity="other">через %1$d дня</item>
     </plurals>
-    <string name="today_next_event_advice">Это влияние может сделать связанную с ним тему заметнее. Наблюдайте за обстоятельствами и выбирайте подходящий вам способ действия.</string>
+    <string name="today_next_event_advice">Здесь показаны дата и участники рассчитанного аспекта, без текстовой трактовки.</string>
     <string name="premium_cta">✦ Премиум — оформить на сайте</string>
     <string name="picker_chart">Карта:</string>
     <string name="acc_glossary">Словарь терминов</string>

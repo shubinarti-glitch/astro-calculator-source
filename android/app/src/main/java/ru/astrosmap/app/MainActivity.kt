@@ -31,6 +31,13 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var analytics: ru.astrosmap.app.data.Analytics
 
+    @Inject lateinit var api: ru.astrosmap.app.data.api.AstroApi
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch { ru.astrosmap.app.editorial.RemoteEditorial.refresh(api) }
+    }
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(ru.astrosmap.app.ui.LangPref.wrap(newBase))
     }

@@ -60,7 +60,7 @@ MISSING_PACKAGES = [
     "data/editorial/text-snippets-v1.json and glossary-v1.json: required private runtime content; excluded",
     "data/editorial/text-tables-v1.json: required backend runtime package; excluded",
     "data/authored_content.json, data/authored_transit_content.json, data/transit_en/: excluded editorial content",
-    "Android private editorial build packages: not supplied or validated; neutral demo data must be prepared separately",
+    "data/editorial/android-v1.json: private server runtime content for Android API; excluded, not an APK build input",
     "Media, ephemerides and Android asset databases: excluded; runtime/build replacements require separate review",
 ]
 
@@ -69,9 +69,18 @@ class ExportError(ValueError):
     """Unsafe export request; nothing should be published."""
 
 
+def android_code_path(name):
+    return any(name.startswith(f"android/{module}/src/{variant}/{language}/")
+               for module in ("app", "astrocore")
+               for variant in ("main", "test")
+               for language in ("java", "kotlin"))
+
+
 def forbidden(name):
     path = PurePosixPath(name.lower())
-    return (any(p in SKIP_DIRS or p.startswith(".source-publish-") for p in path.parts)
+    return (any((p in SKIP_DIRS and not (p == "data" and android_code_path(name)
+                                         and path.suffix in {".kt", ".java"}))
+                or p.startswith(".source-publish-") for p in path.parts)
             or path.name.startswith(".env")
             or path.name in {"signing.properties", "local.properties", "yookassa.json", "credentials.json"}
             or (path.suffix in FORBIDDEN_SUFFIXES and name != "android/swisseph/README.orig"))
@@ -101,7 +110,8 @@ def _walk(root, directory):
         if stat.S_ISLNK(info.st_mode) or getattr(info, "st_file_attributes", 0) & 0x400:
             raise ExportError("Link/reparse point in selected tree: " + name)
         if path.is_dir():
-            if path.name.lower() not in SKIP_DIRS and not path.name.startswith("."):
+            code_data = path.name == "data" and android_code_path(name + "/")
+            if (path.name.lower() not in SKIP_DIRS or code_data) and not path.name.startswith("."):
                 yield from _walk(root, path)
         else:
             yield name

@@ -1,0 +1,7 @@
+<resources>
+    <string name="report_send">Send</string>
+    <string name="report_received">Report received. ID: %1$s</string>
+    <string name="report_failed">Could not confirm delivery. Check your connection and retry. Your text remains in the form.</string>
+    <string name="report_privacy">Describe the steps before the error. Do not include passwords, email or birth details. This text, app version, store and Android version will be sent to astrosmap.ru for the administrator. No screenshots or logs are attached.</string>
+    <string name="report_consent">I agree to send my description and the listed technical information.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="forecast_sphere_basis">На чём основан прогноз</string>
+    <string name="forecast_sphere_no_events">В ответе сервера нет ключевых событий для этой сферы на выбранный период. Это не означает отсутствия событий в жизни.</string>
+    <string name="forecast_sphere_text_unavailable">Пояснение к этому событию не получено с сервера.</string>
+</resources>

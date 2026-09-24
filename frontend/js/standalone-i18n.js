@@ -9,6 +9,7 @@
   const originalAttrs = new Map();
   const about = Boolean(document.querySelector(".about-wrap"));
   const privacy = location.pathname.endsWith("privacy.html");
+  const mobilePrivacy = location.pathname.endsWith("mobile-privacy.html");
   function attr(selector, name, english, lang) {
     document.querySelectorAll(selector).forEach(el => {
       if (!originalAttrs.has(el)) originalAttrs.set(el, new Map());
@@ -23,7 +24,8 @@
     try { localStorage.setItem("astro_lang", lang); } catch (_) {}
     document.querySelectorAll("[data-standalone-ru]").forEach(el => { el.hidden = lang !== "ru"; });
     document.querySelectorAll("[data-standalone-en]").forEach(el => { el.hidden = lang !== "en"; });
-    const title = about ? "Artem — astrologer and tarot reader | Project Artemisa" :
+    const title = mobilePrivacy ? "Optional mobile reports — AstroSMap" :
+      about ? "Artem — astrologer and tarot reader | Project Artemisa" :
       `${privacy ? "Personal Data Processing Policy" : "User Agreement"} — AstroSMap (Project Artemisa)`;
     document.title = lang === "en" ? title : originalTitle;
     if (about) {

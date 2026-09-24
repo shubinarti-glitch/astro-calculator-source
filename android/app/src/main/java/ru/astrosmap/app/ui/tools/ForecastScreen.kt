@@ -213,7 +213,27 @@ fun ForecastScreen(viewModel: ForecastViewModel = hiltViewModel()) {
                         style = MaterialTheme.typography.titleSmall,
                         color = if (s.s("tone") == "favorable") GoodColor else MaterialTheme.colorScheme.secondary,
                     )
-                    s.s("text")?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
+                    val highlights = s.a("highlights").let {
+                        if (mode == InterpretationMode.BRIEF) it.take(1) else it
+                    }
+                    if (highlights.isEmpty()) {
+                        Text(stringResource(R.string.forecast_sphere_no_events), style = MaterialTheme.typography.bodyMedium)
+                    } else {
+                        Text(stringResource(R.string.forecast_sphere_basis), style = MaterialTheme.typography.labelLarge)
+                        highlights.forEach { event ->
+                            Text(
+                                listOfNotNull(event.s("date"), event.s("p1_ru"),
+                                    event.s("aspect_ru") ?: event.s("aspect_symbol"), event.s("p2_ru")).joinToString(" · "),
+                                modifier = Modifier.padding(top = 8.dp),
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                            Text(
+                                event.s("text")?.takeIf { it.isNotBlank() }
+                                    ?: stringResource(R.string.forecast_sphere_text_unavailable),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                    }
                 }
             }
             item { ToolSection(stringResource(R.string.forecast_events)) }

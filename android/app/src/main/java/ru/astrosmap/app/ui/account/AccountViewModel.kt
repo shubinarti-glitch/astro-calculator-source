@@ -94,8 +94,14 @@ class AccountViewModel @Inject constructor(
         syncManager.sync()
     }
 
-    fun register(username: String, email: String, password: String) = submit {
-        val resp = api.register(RegisterRequest(username.trim(), password, email.trim(), lang()))
+    fun register(username: String, email: String, password: String,
+                 privacyAccepted: Boolean, termsAccepted: Boolean) = submit {
+        if (!privacyAccepted || !termsAccepted) {
+            errorText = if (lang() == "ru") "Примите политику и пользовательское соглашение." else "Accept the privacy policy and terms."
+            return@submit
+        }
+        val resp = api.register(RegisterRequest(username.trim(), password, email.trim(), lang(),
+            privacyAccepted, termsAccepted, "2026-09-01", "2026-09-01", "android"))
         tokenStore.save(resp.token)
         refreshMe()
         syncManager.sync()
@@ -162,9 +168,16 @@ class AccountViewModel @Inject constructor(
             when (val detail = Json.parseToJsonElement(body).jsonObject["detail"]) {
                 is JsonPrimitive -> detail.content
                 is JsonArray -> detail.joinToString("; ") {
-                    it.jsonObject["msg"]?.jsonPrimitive?.content.orEmpty()
-                        .removePrefix("Value error, ")
-                }
+                    val field = (it.jsonObject["loc"] as? JsonArray)?.lastOrNull()?.jsonPrimitive?.content
+                    when (field) {
+                        "email" -> if (lang() == "ru") "Проверьте адрес электронной почты." else "Check your email address."
+                        "username" -> if (lang() == "ru") "Имя пользователя: от 2 до 50 символов." else "Username: 2 to 50 characters."
+                        "password" -> if (lang() == "ru") "Пароль: от 8 до 200 символов." else "Password: 8 to 200 characters."
+                        "privacy_accepted", "terms_accepted", "privacy_version", "terms_version", "consent_source" ->
+                            if (lang() == "ru") "Не удалось передать согласия. Обновите приложение и повторите регистрацию." else "Could not submit consent. Update the app and try again."
+                        else -> if (lang() == "ru") "Проверьте заполненные поля." else "Check the entered details."
+                    }
+                }.split("; ").distinct().joinToString("; ")
                 else -> null
             }
         }.getOrNull().takeUnless { it.isNullOrBlank() } ?: "HTTP ${e.code()}"

@@ -67,6 +67,21 @@ def test_allowlist_exclusions_and_notices(source, tmp_path):
     assert not (destination / "PUBLIC-SOURCE-REPORT.json").exists()
 
 
+def test_android_data_package_is_code_but_runtime_data_stays_private(source, tmp_path):
+    names = ["android/app/src/main/java/ru/astrosmap/app/data/api/AstroApi.kt",
+             "android/app/src/test/kotlin/ru/astrosmap/app/data/CrashSummaryTest.kt"]
+    for name in names:
+        put(source, name, b"package fixture\n")
+    put(source, "data/private.kt", b"private runtime content")
+    put(source, "backend/data/private.py", b"private runtime content")
+    destination = tmp_path / "draft"
+    exporter.export(source, destination, write=True)
+    for name in names:
+        assert (destination / name).is_file()
+    assert not (destination / "data").exists()
+    assert not (destination / "backend/data").exists()
+
+
 def test_local_android_signing_files_are_recorded_without_being_read(source, tmp_path):
     signing = put(source, "android/astrosmap-release.jks", b"private signing material")
     properties = put(source, "android/signing.properties", b"storePassword=secret")

@@ -1,0 +1,5 @@
+<resources>
+    <string name="crash_opt_in">Send technical crash reports</string>
+    <string name="crash_explanation">With your consent: exception type, method names and line numbers, app version, store and Android. One latest report is sent to astrosmap.ru on the next launch. No exception messages, charts, passwords or screenshots. Disabling deletes the pending report; a transmission already started cannot be recalled.</string>
+    <string name="crash_settings_error">Could not save this setting. Please retry.</string>
+</resources>

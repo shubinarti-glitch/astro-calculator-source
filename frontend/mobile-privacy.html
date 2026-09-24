@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Мобильные отчёты — AstroSMap</title><style>body{margin:0;padding:24px 16px 48px;background:#0a0a1a;color:#ece9f5;font-family:Georgia,serif;line-height:1.65}main{max-width:760px;margin:auto}h1,h2{color:#c9a86a}h1{font-size:1.5rem}h2{font-size:1.2rem}a{color:#8b7bd8}.muted{color:#9a94b8}</style></head><body>
+<nav aria-label="Language"><a href="?lang=ru">RU</a> · <a href="?lang=en">EN</a></nav>
+<main data-standalone-ru><p><a href="/privacy.html">Основная политика</a></p><h1>Добровольные отчёты мобильного приложения</h1>
+<p class="muted">Дополнение к политике обработки персональных данных · версия 2026-09-24</p>
+<p>Эти функции работают только по отдельному согласию. Регистрация и использование основных функций приложения не требуют отправки обращения или включения диагностики.</p>
+<h2>Ручное обращение</h2>
+<p>При нажатии «Отправить» с установленной галочкой согласия на astrosmap.ru передаются введённое описание, случайный номер обращения, версия и код приложения, канал магазина и версия Android API. Не вводите пароли, почту, данные рождения или другие личные сведения в описание. Скриншоты и журналы устройства автоматически не прикладываются.</p>
+<h2>Диагностика вылетов</h2>
+<p>Переключатель выключен по умолчанию. После включения при необработанном JVM-исключении приложение сохраняет один последний технический отчёт: тип исключения, до 10 кадров с именами классов и методов и номерами строк, версию приложения, канал магазина, Android API и случайный номер отчёта. Сообщение исключения, его вложенные причины, пароли, карты, скриншоты и пользовательские идентификаторы в отчёт не включаются.</p>
+<p>Передача выполняется при следующем запуске. Без сети отчёт остаётся на устройстве для следующей попытки. Это не сбор ANR, native-сбоев или завершений процесса системой; получение каждого сбоя не гарантируется.</p>
+<h2>Хранение, доступ и отключение</h2>
+<p>Ожидающий отчёт хранится в закрытой папке приложения, исключённой из Android backup. После подтверждения сервером он удаляется. Запись старше 7 дней удаляется при следующей проверке приложением. Отключение диагностики прекращает дальнейшую автоматическую отправку и удаляет ожидающую запись; уже начатую передачу отозвать нельзя.</p>
+<p>Сервер хранит не более 1000 последних мобильных отчётов; записи старше 30 дней удаляются при следующем чтении или записи этого хранилища. Это не удаление фоновым таймером ровно через 30 дней. Указанный в основной политике срок для обычной поддержки не применяется к этому отдельному хранилищу.</p>
+<p>Отчёты доступны администратору для разбора ошибок и улучшения приложения. В записи отчёта не сохраняются токен входа, IP, имя или email, если пользователь сам не написал их в описании. Серверные access-логи обрабатываются отдельно; отсутствие IP в записи отчёта не означает отсутствие технических журналов на сервере. Работа хостинга и резервных копий описана в основной политике.</p>
+<p>Для запроса удаления уже отправленного отчёта напишите на <a href="mailto:astrosmap@yandex.ru">astrosmap@yandex.ru</a>, по возможности указав его номер. Само отключение диагностики не удаляет ранее отправленные серверу записи.</p></main>
+<main data-standalone-en hidden><p><a href="/privacy.html?lang=en">Main policy</a></p><h1>Optional mobile app reports</h1>
+<p class="muted">Supplement to the Personal Data Processing Policy · version 2026-09-24</p>
+<p>These features require separate consent. Registration and the app’s core features do not require submitting feedback or enabling diagnostics.</p>
+<h2>Manual feedback</h2>
+<p>When you select the consent checkbox and press Send, the entered description, a random report ID, app version and version code, store channel and Android API version are sent to astrosmap.ru. Do not enter passwords, email addresses, birth data or other personal information. Screenshots and device logs are not attached automatically.</p>
+<h2>Crash diagnostics</h2>
+<p>The switch is off by default. Once enabled, an unhandled JVM exception saves one latest technical report: the exception type, up to 10 frames containing class and method names and line numbers, app version, store channel, Android API and a random report ID. Exception messages, nested causes, passwords, charts, screenshots and user identifiers are not included.</p>
+<p>The app attempts transmission on the next launch. If offline, the report stays on the device for a later attempt. This does not collect ANRs, native crashes or system process kills, and cannot guarantee delivery of every crash.</p>
+<h2>Storage, access and withdrawal</h2>
+<p>The pending report is kept in the app’s private directory excluded from Android backup. It is removed after server acknowledgement. A record older than 7 days is removed at the next app check. Disabling diagnostics prevents further automatic transmission and deletes the pending record; a transmission already started cannot be recalled.</p>
+<p>The server retains at most 1000 latest mobile reports. Records older than 30 days are removed at the next read or write of this store, rather than by a background timer at exactly 30 days. The main policy’s ordinary support retention period does not apply to this separate store.</p>
+<p>Reports are available to the administrator for investigating errors and improving the app. Login tokens, IP addresses, names and email addresses are not saved in the report record unless the user enters them in the description. Server access logs are handled separately; omitting IP addresses from report records does not mean that server logs do not exist. Hosting and backups are described in the main policy.</p>
+<p>To request deletion of a submitted report, contact <a href="mailto:astrosmap@yandex.ru">astrosmap@yandex.ru</a> and include its report ID if available. Disabling diagnostics does not itself erase previously submitted server records.</p></main>
+<script src="/js/standalone-i18n.js?v=1"></script></body></html>

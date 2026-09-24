@@ -3836,6 +3836,7 @@ $("cab-history").addEventListener("click", (e) => {
 
 // --- Админ-панель ---
 async function loadAdmin() {
+  loadMobileReports();
   try {
     const [statsR, usersR, usageR, payR] = await Promise.all([
       fetch("/api/admin/stats", { headers: authHeaders() }),
@@ -3897,6 +3898,31 @@ async function loadAdmin() {
     }
   } catch {
     $("admin-stats").innerHTML = `<p class="section-note">${LANG === "en" ? "Failed to load admin data." : "Не удалось загрузить данные админки."}</p>`;
+  }
+}
+
+async function loadMobileReports() {
+  const target = $("admin-mobile-reports");
+  target.textContent = LANG === "en" ? "Loading reports…" : "Загрузка обращений…";
+  try {
+    const response = await fetch("/api/admin/mobile-reports", { headers: authHeaders(), cache: "no-store" });
+    if (!response.ok) throw new Error("Reports unavailable");
+    const payload = await response.json();
+    target.replaceChildren();
+    if (!payload.reports.length) target.textContent = LANG === "en" ? "No reports." : "Обращений пока нет.";
+    for (const report of payload.reports) {
+      const item = document.createElement("details");
+      const title = document.createElement("summary");
+      title.textContent = `${new Date(report.received_at * 1000).toLocaleString()} · ${report.app_version} (${report.version_code}) · ${report.store} · ${report.id}`;
+      const body = document.createElement("p");
+      body.style.whiteSpace = "pre-wrap";
+      body.style.overflowWrap = "anywhere";
+      body.textContent = report.description;
+      item.append(title, body);
+      target.append(item);
+    }
+  } catch {
+    target.textContent = LANG === "en" ? "Could not load reports." : "Не удалось загрузить обращения.";
   }
 }
 

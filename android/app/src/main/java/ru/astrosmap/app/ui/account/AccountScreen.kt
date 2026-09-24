@@ -166,7 +166,7 @@ private fun AuthForm(viewModel: AccountViewModel, onMaterials: () -> Unit) {
 
         Button(
             onClick = {
-                if (registerMode) viewModel.register(username, email, password)
+                if (registerMode) viewModel.register(username, email, password, privacyAccepted, termsAccepted)
                 else viewModel.login(username, password)
             },
             // Пределы те же, что у сервера, иначе форма отправит заведомо невалидное и вернётся 422.

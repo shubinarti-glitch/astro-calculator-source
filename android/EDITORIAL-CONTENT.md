@@ -1,58 +1,33 @@
-# Android editorial data (bounded separation)
+# Android editorial content — API only
 
-The production build requires the private, versioned
-`../data/editorial/android-v1.json`. The root `/data/` ignore rule excludes it.
-An alternative build-machine location can be selected with
-`-PandroidEditorialFile=<absolute path>`. Provision the file privately before
-building either `standard` or `googleplay`; never commit it or the backups.
+The Android build does not consume private editorial packages. The former
+generateAndroidEditorial task and its generated source directory are removed.
+Stable Tarot IDs remain in code; names, meanings, advice and lunar editorial
+texts are fetched from GET /api/mobile/editorial/v1.
 
-`generateAndroidEditorial` validates schema, completeness, the 78 stable card
-IDs/order, eight phases and twelve signs. It emits Kotlin beneath
-`app/build/generated/androidEditorial/kotlin/` (ignored). All app variants depend
-on generation. Missing/invalid production data fails the build, even if generated
-output from a previous build exists. The generator does not use the shared build
-cache. Other compiler/build caches and APKs may still contain the texts: keep
-those artifacts private too.
+The server reads data/editorial/android-v1.json privately and validates its
+schema and the 78-card ID order before returning it. Never commit this file.
+Production Android uses https://astrosmap.ru/; debug uses the local emulator
+host. Deploy the API before distributing the updated application.
 
-The existing `TarotCard`, `TarotDeck` and `LunarTexts` APIs and gameplay methods
-are unchanged. Initialization is synchronous JVM object initialization, with no
-Context, assets, network, coroutine or Activity dependency. Both languages remain
-embedded; getters choose the current locale on each access. Saved IDs, ordering,
-unknown-key fallbacks, phase labels and emoji retain their original behavior.
+RemoteEditorial stores responses in process memory only, observed by Compose.
+No editorial asset, local content database or HTTP disk cache is introduced.
+Refreshing on Activity resume and before daily notification/widget work obtains
+the current package. Failed or timed-out refresh clears the in-memory package
+and exposes neutral localized messages, not an embedded interpretation.
+Content already fetched may remain in memory until the next refresh/process exit;
+this is not a promise of immediate erasure on network disconnection.
 
-## Verification
+Existing saved user readings and OS-rendered notifications/widgets are not
+deleted by this migration. Previously installed APKs and old private build
+outputs may still contain historical texts. Do not redistribute those outputs.
 
-Before extraction, byte-exact originals plus SHA-256 hashes were saved under
-`../data/editorial/android-originals/`. The one-shot migration refuses overwrite:
+Verification: unit tests check stable IDs/ranking, neutral fallback, language
+switching and updating existing card objects from synthetic remote content.
+Server tests use synthetic data and validate endpoint failure behavior and
+no-store headers. Before release, inspect fresh APK/AAB contents, test network
+loss and cold-start workers on a device, and audit other editorial sources.
+Compilation alone is not an APK content audit or a licensing certification.
 
-```
-python scripts/android_editorial_extract.py extract
-python scripts/android_editorial_extract.py compare android/app/build/generated/androidEditorial/kotlin/ru/astrosmap/app/editorial/AndroidEditorial.kt
-```
-
-Run these from the repository root. `compare` checks backup hashes, all data
-against the originals (including order), generated literals, and that facades
-changed only in table initializers. For future intentional editorial changes,
-retain this baseline and approve/version new parity evidence explicitly.
-
-From `android/`, run both `:app:testStandardDebugUnitTest` and
-`:app:testGoogleplayDebugUnitTest`; `AndroidEditorialTest` exercises access on a
-plain JVM without Android initialization, saved ID lookup, draw/rank invariants,
-and RU→EN→RU switching. This does not replace on-device cold-start testing of
-DailyWorker/WidgetUpdateWorker or release/minified APK testing. Do not claim those
-runtime scenarios verified solely from unit tests.
-
-## Public/demo and licensing limits
-
-A source-only public checkout intentionally cannot build without a separately
-provisioned editorial package. No demo package or silent production fallback is
-provided in this change. A future public demo needs explicitly reviewed neutral
-data matching the schema/IDs, clear demo labeling, and safeguards against shipping
-placeholder content in production. The override property is a private provisioning
-mechanism, not such a demo safeguard.
-
-This removes editorial text from current tracked Kotlin files only. Offline APKs
-still embed readable/extractable text. It neither removes past Git history/copies
-nor guarantees legal protection or revokes any previously granted license. Tarot
-artwork, other Android text sources and repository-history cleanup are outside
-this bounded change. No publishing, deployment, database or secret changes.
+The public source exporter still requires a separate completeness review.
+Do not include private content, credentials, signing keys or build outputs.

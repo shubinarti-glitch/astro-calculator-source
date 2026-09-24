@@ -18,11 +18,14 @@ class AstroApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject lateinit var api: ru.astrosmap.app.data.api.AstroApi
+
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(workerFactory).build()
 
     override fun onCreate() {
         super.onCreate()
+        ru.astrosmap.app.data.CrashDiagnostics.install(this, api)
         // Фоновая синхронизация карт с кабинетом — раз в 12 часов при наличии сети.
         val request = PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS)
             .setConstraints(

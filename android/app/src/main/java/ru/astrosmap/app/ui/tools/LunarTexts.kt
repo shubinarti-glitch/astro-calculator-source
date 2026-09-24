@@ -26,11 +26,6 @@ object LunarTexts {
 
     fun phaseName(key: String): String = phaseNames[key]?.let { g(it) } ?: key
 
-    private val phaseAdvice = ru.astrosmap.app.editorial.AndroidEditorial.phaseAdvice
-
-    fun phaseAdvice(key: String): String = phaseAdvice[key]?.let { g(it) } ?: ""
-
-    private val moonMood = ru.astrosmap.app.editorial.AndroidEditorial.moonMood
-
-    fun moonMood(sign: String): String = moonMood[sign]?.let { g(it) } ?: ""
+    fun phaseAdvice(key: String): String = ru.astrosmap.app.editorial.RemoteEditorial.lunar(key, false, AstroLabels.isRu())
+    fun moonMood(sign: String): String = ru.astrosmap.app.editorial.RemoteEditorial.lunar(sign, true, AstroLabels.isRu())
 }

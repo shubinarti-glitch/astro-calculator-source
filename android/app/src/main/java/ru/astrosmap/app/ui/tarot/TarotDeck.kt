@@ -11,13 +11,13 @@ import ru.astrosmap.app.ui.AstroLabels
  */
 data class TarotCard(
     val id: String,
-    val nameRu: String,
-    val nameEn: String,
-    val meaningRu: String,
-    val meaningEn: String,
-    val adviceRu: String,
-    val adviceEn: String,
 ) {
+    val nameRu: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 1, true)
+    val nameEn: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 2, false)
+    val meaningRu: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 3, true)
+    val meaningEn: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 4, false)
+    val adviceRu: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 5, true)
+    val adviceEn: String get() = ru.astrosmap.app.editorial.RemoteEditorial.card(id, 6, false)
     val name: String get() = if (AstroLabels.isRu()) nameRu else nameEn
     val meaning: String get() = if (AstroLabels.isRu()) meaningRu else meaningEn
     val advice: String get() = if (AstroLabels.isRu()) adviceRu else adviceEn
@@ -25,7 +25,7 @@ data class TarotCard(
 
 object TarotDeck {
 
-    val cards: List<TarotCard> = ru.astrosmap.app.editorial.AndroidEditorial.cards
+    val cards: List<TarotCard> = ru.astrosmap.app.editorial.RemoteEditorial.cardIds.map { TarotCard(it) }
 
     init {
         require(cards.size == 78) { "В колоде должно быть 78 карт, а не ${cards.size}" }

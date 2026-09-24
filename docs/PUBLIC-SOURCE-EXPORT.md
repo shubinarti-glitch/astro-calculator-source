@@ -38,15 +38,14 @@ content to an allowed source filename can evade these heuristics: manual review
 of embedded Python/JS/Kotlin/XML/HTML text remains mandatory.
 
 The JSON report identifies preserved and missing expected notices, omitted
-runtime/build packages and known missing build inputs. A written draft includes
-`PUBLIC-SOURCE-REPORT.json`. Missing notices are review blockers, not fabricated
+runtime/build packages and known missing build inputs. The report is returned separately and is not copied into the public draft. Missing notices are review blockers, not fabricated
 or silently replaced. The known-notice checklist is not a transitive license
 audit; the Gradle wrapper and bundled html2pdf dependencies need separate review.
 
 Every report marks `ready_to_build` and `ready_to_publish` false. In particular,
 `data/editorial/text-tables-v1.json` is excluded although the backend requires
-it. Other editorial content, Android private build packages and excluded asset
-inputs also need review. A separately authored neutral demo dataset is future
+it. Other editorial content and excluded asset inputs also need review.
+Android editorial data is a private server runtime package, not an APK build input. A separately authored neutral demo dataset is future
 work; the exporter does not generate one or replace production data.
 
 Successful export means only that the local draft passed these technical checks.
@@ -60,3 +59,5 @@ Verification (temporary fixtures only, no application imports):
 ```powershell
 python -B -m pytest tests/test_public_source_export.py -q -p no:cacheprovider
 ```
+
+Android Java/Kotlin source packages named `data` under main/test source roots are included. This exception does not include runtime data, assets, or arbitrary files in those packages.

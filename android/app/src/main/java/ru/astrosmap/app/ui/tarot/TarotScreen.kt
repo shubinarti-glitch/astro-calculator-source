@@ -100,10 +100,12 @@ fun TarotScreen(viewModel: TarotViewModel = hiltViewModel()) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            OutlinedButton(
-                onClick = { openSite(context, TAROLOGIST_TG) },
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text(stringResource(R.string.tarot_live_reader)) }
+            if (ru.astrosmap.app.BuildConfig.SHOW_EXTERNAL_PURCHASE_LINKS) {
+                OutlinedButton(
+                    onClick = { openSite(context, TAROLOGIST_TG) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(stringResource(R.string.tarot_live_reader)) }
+            }
         }
 
         if (showArchive) {

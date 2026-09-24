@@ -40,6 +40,7 @@ class WidgetUpdateWorker @AssistedInject constructor(
     @Assisted params: WorkerParameters,
     private val engine: AstroEngine,
     private val dao: ChartDao,
+    private val api: ru.astrosmap.app.data.api.AstroApi,
 ) : CoroutineWorker(context, params) {
 
     private data class DayData(
@@ -51,6 +52,7 @@ class WidgetUpdateWorker @AssistedInject constructor(
     )
 
     override suspend fun doWork(): Result {
+        ru.astrosmap.app.editorial.RemoteEditorial.refresh(api)
         // Язык виджета следует за выбором в приложении.
         val lang = LangPref.get(context)
         Locale.setDefault(Locale.forLanguageTag(lang))
