@@ -7,6 +7,7 @@ from __future__ import annotations
 from .editorial_data import text as _editorial_text
 
 import json
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -248,6 +249,46 @@ def _load_authored_transits() -> dict:
 
 AUTHORED_TRANSIT = _load_authored_transits()
 AUTHORED_TRANSIT_EN = TE.load_authored()
+
+
+def _first_sentences(value: str, count: int = 1) -> str:
+    """Return complete opening sentences without cutting authored copy mid-sentence."""
+    parts = [part.strip() for part in re.split(r"(?<=[.!?])\s+", value.strip()) if part.strip()]
+    return " ".join(parts[:count])
+
+
+def transit_forecast_parts(t_name: str, aspect: str, n_name: str,
+                           lang: str = "ru") -> Optional[dict]:
+    """Concise authored meaning and practical advice for forecast cards."""
+    moving = _TRANSIT_DEEP_NAME.get(t_name)
+    target = _canonical_transit_target(n_name)
+    if not moving or aspect not in _TRANSIT_ASPECT_RU:
+        return None
+
+    if lang == "en":
+        pair = AUTHORED_TRANSIT_EN.get(f"transit|{moving}|{target}")
+        if not isinstance(pair, dict):
+            source = g(PLANET_ROLE.get(moving), "en") or TE.ROLES.get(moving)
+            focus = g(PLANET_ROLE.get(target), "en") or TE.ROLES.get(target)
+            pair = TE.generic_pair(source, focus) if source and focus else None
+    else:
+        pair = AUTHORED_TRANSIT.get(f"transit|{moving}|{target}")
+        if not isinstance(pair, dict):
+            pair = _generic_transit_pair(moving, target)
+
+    required = ("energy", "realization", "advice")
+    if not isinstance(pair, dict) or any(
+        not isinstance(pair.get(key), str) or not pair[key].strip()
+        for key in required
+    ):
+        return None
+
+    interpretation = " ".join(filter(None, (
+        _first_sentences(pair["energy"]),
+        _first_sentences(pair["realization"]),
+    )))
+    advice = _first_sentences(pair["advice"], 2)
+    return {"interpretation": interpretation, "advice": advice}
 
 
 def _transit_phase_ru(orbit: Optional[float], movement: str) -> str:

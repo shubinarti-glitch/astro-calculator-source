@@ -1185,16 +1185,26 @@ def _transit_overview(aspects: list[dict], lang: str) -> dict:
 
 
 def _forecast_by_sphere(events: list[dict], lang: str) -> list[dict]:
-    """Группирует ключевые транзиты периода по сферам жизни и оценивает тон каждой."""
+    """Группирует события по одной значимой сфере и не показывает пустые шаблоны."""
     out = []
-    for key, name_pair, icon, points in _LIFE_SPHERES:
-        # Сфера активируется транзитом к её натальной точке-сигнификатору (p2).
-        ev = sorted([e for e in events if e.get("p2") in points], key=lambda e: e["orb"])
+    for key, name_pair, icon, _points in _LIFE_SPHERES:
+        unique = {}
+        for event in events:
+            if event.get("sphere_key") != key:
+                continue
+            event_key = (event.get("exact_datetime"), event.get("p1"),
+                         event.get("aspect_ru"), event.get("p2"))
+            unique[event_key] = event
+        ev = sorted(
+            unique.values(),
+            key=lambda event: (-_tr_intensity(event.get("p1", ""))[1],
+                               event.get("orb", 99), event.get("date", "")),
+        )
+        if not ev:
+            continue
         pos = sum(1 for e in ev if e["tone"] == "positive")
         neg = sum(1 for e in ev if e["tone"] == "negative")
-        if not ev:
-            tone = "calm"
-        elif pos and not neg:
+        if pos and not neg:
             tone = "favorable"
         elif neg and not pos:
             tone = "challenging"
@@ -1203,8 +1213,7 @@ def _forecast_by_sphere(events: list[dict], lang: str) -> list[dict]:
         else:
             tone = "active"
         name = name_pair[1] if lang == "en" else name_pair[0]
-        intro = _editorial_text('astrology.24e87bb94b4a5e5357ac5afb638702539e20d8868fa01fcda0dbdb4c056899fe') if lang == "en" else _editorial_text('astrology.36f76a461e8a373ce39c5355799adc909bccbbdc8127d714115faaa5139dca39')
-        text = f'{intro} {_l_pair(_SPHERE_TONE[tone], lang)}.'
+        text = ev[0]["text"]
         out.append({
             "key": key,
             "name": name,
@@ -1215,6 +1224,35 @@ def _forecast_by_sphere(events: list[dict], lang: str) -> list[dict]:
             "highlights": ev[:5],
         })
     return out
+
+
+_FORECAST_HOUSE_SPHERE = {
+    1: "health", 2: "career", 3: "growth", 4: "home",
+    5: "love", 6: "health", 7: "love", 8: "love",
+    9: "growth", 10: "career", 11: "growth", 12: "health",
+}
+
+_FORECAST_ANGLE_HOUSE = {
+    "Ascendant": 1,
+    "Medium_Coeli": 10,
+    "Descendant": 7,
+    "Imum_Coeli": 4,
+}
+
+
+def _forecast_sphere_key(model, point_name: str) -> str:
+    """Map the affected natal point to the life area of its natal house."""
+    house_num = _FORECAST_ANGLE_HOUSE.get(point_name)
+    if house_num is None:
+        attr = point_name.lower()
+        point = getattr(model, attr, None)
+        if point is None and attr in _NODE_FALLBACK:
+            point = getattr(model, _NODE_FALLBACK[attr], None)
+        if point is not None:
+            house_num = serialize_point(point).get("house_num")
+    if house_num in _FORECAST_HOUSE_SPHERE:
+        return _FORECAST_HOUSE_SPHERE[house_num]
+    return _sphere_key_of(point_name)[0]
 
 
 def _l_pair(pair, lang):
@@ -1360,9 +1398,11 @@ def forecast_report(
         if info["orb"] > 3.0:
             continue  # аспект не становится точным в периоде — это фон, а не событие
         info = _refine_transit_pass(natal_model, loc, tz, (p1, kind, p2), info)
-        text = I.interpret_transit(p1, kind, p2, lang)
-        if not text:
+        parts = I.transit_forecast_parts(p1, kind, p2, lang)
+        if not parts:
             continue
+        advice_label = "Advice" if lang == "en" else "Совет"
+        text = f"{parts['interpretation']}\n\n{advice_label}: {parts['advice']}"
         nature = C.ASPECTS.get(kind, {}).get("nature", "")
         tone = "positive" if nature == "harmonious" else ("negative" if nature == "tense" else "neutral")
         events.append({
@@ -1375,11 +1415,14 @@ def forecast_report(
             "aspect_symbol": C.aspect_symbol(kind),
             "nature": nature,
             "tone": tone,
+            "sphere_key": _forecast_sphere_key(natal_model, p2),
             "sphere": C._l(_SPHERE_OF.get(p2, default_sphere), lang),
             "p2": p2,
             "p2_ru": C.point_name(p2, lang),
             "p2_symbol": C.point_symbol(p2),
             "orb": round(info["orb"], 2),
+            "interpretation": parts["interpretation"],
+            "advice": parts["advice"],
             "text": text,
         })
     events.sort(key=lambda e: (e["date"], e["orb"]))

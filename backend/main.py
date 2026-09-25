@@ -565,7 +565,7 @@ def _brief_report(report: dict, kind: str) -> dict:
             result["sphere_forecast"] = spheres[:2]
             for sphere in result["sphere_forecast"]:
                 if isinstance(sphere, dict):
-                    sphere["text"] = _short_text(sphere.get("text"), 280)
+                    sphere["text"] = _short_text(sphere.get("text"), 900)
         events = result.get("events")
         if isinstance(events, list):
             result["events"] = events[:3]
